@@ -7,11 +7,15 @@ function GuildsPage() {
   const [guilds, setGuilds] = useState([]);
 
   useEffect(() => {
-    // Gọi API lấy danh sách guilds
     guildApi
       .getUserGuilds()
       .then((response) => {
-        setGuilds(response.data);
+        // Cập nhật dữ liệu guilds để thêm thuộc tính botInGuild
+        const updatedGuilds = response.data.map(guild => ({
+          ...guild,
+          botInGuild: false // Giả định mặc định, cập nhật sau khi có dữ liệu từ backend
+        }));
+        setGuilds(updatedGuilds);
       })
       .catch((error) => console.error("Error fetching guilds:", error));
   }, []);
@@ -22,11 +26,10 @@ function GuildsPage() {
         <Guilds guilds={guilds} />
       ) : (
         <div className="text-center">
-          <h2 className="text-lg">Bạn chưa có guild nào.</h2>
           <p className="mb-4">Bạn cần đăng nhập để truy cập trang này.</p>
           <Link
             className="flex items-center py-2 px-4 rounded-lg bg-[#5865F2] hover:bg-[#5865F2]/80 hover:text-white/80 transition-colors duration-300"
-            to="/user" // Liên kết đến trang đăng nhập
+            to="/user"
           >
             <span className="text-sm">Đăng nhập với Discord</span>
           </Link>

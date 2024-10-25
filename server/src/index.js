@@ -143,13 +143,21 @@ app.get('/guilds', async (req, res) => {
     }
 
     // Return only managed guilds
-    res.json(managedGuilds.map(guild => ({
-      id: guild.id,
-      name: guild.name,
-      owner: guild.owner,
-      permissions: guild.permissions,
+    const response = managedGuilds.map(guild => ({
+      guild: {
+        id: guild.id,
+        name: guild.name,
+        icon: guild.icon,
+        banner: guild.banner,
+        owner: guild.owner,
+        permissions: guild.permissions,
+        permissions_new: guild.permissions_new,
+        features: guild.features, // Giả sử features là một mảng
+      },
       botInGuild: guild.botInGuild,
-    })));
+    }));
+
+    res.json(response);
   } catch (error) {
     console.error('Error fetching guilds:', error);
     res.status(500).json({ error: 'Failed to fetch guilds' });
