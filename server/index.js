@@ -6,14 +6,12 @@ const axios = require("axios");
 const { Client, GatewayIntentBits } = require('discord.js');
 const app = express();
 const router = express.Router();
+const { Pool } = require("pg");
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(router);
-
-let users = {}; // Store user information
-let managedGuilds = []; // Store guilds the user can manage
 
 // Initialize your Discord client
 const client = new Client({
@@ -23,29 +21,60 @@ const client = new Client({
   ],
 });
 
+const pool = new Pool({
+  connectionString: process.env.PsqlConnectionString,
+});
+
 client.login(process.env.BOT_TOKEN);
 
 client.once('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
 
+// Store user information
+let users = {}; 
+
 // Fetch current user info
 router.get("/user/me", async (req, res) => {
-  const user = users[0]; // Get the first user (consider improving this)
-  if (user) {
-    const userData = {
-      id: user.id,
-      username: user.username,
-      avatar: user.avatar,
-    };
-    res.json(userData);
-  } else {
-    res.status(404).send("User info not found");
+  const userId = Object.keys(users)[0];
+  if (!userId) {
+    return res.status(401).send("Not logged in");
+  }
+
+  try {
+    console.log("Fetching user info from the database");
+
+    const result = await pool.query(`
+      SELECT userid, username, avatarid, totalxp, currencyamount 
+      FROM discorduser 
+      WHERE UserId = $1
+    `, [userId]);
+
+    const user = result.rows[0];
+
+    if (user) {
+      const userData = {
+        id: user.userid, // Access UserId as it is in the result
+        username: user.username,
+        avatarid: user.avatarid,
+        totalXP: user.totalxp,
+        currencyAmount: user.currencyamount,
+      };
+
+      console.log("User data fetched successfully:", userData);
+      res.json(userData);
+    } else {
+      console.log("User not found");
+      res.status(404).send("User info not found");
+    }
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    res.status(500).send("Error fetching user info");
   }
 });
 
 // Discord login route
-router.get("/auth/discord/login", async (req, res) => {
+router.get("/auth/discord/login", (req, res) => {
   const url =
     `https://discord.com/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(process.env.DISCORD_REDIRECT_URI)}&scope=identify%20guilds`;
 
@@ -85,7 +114,7 @@ router.get("/auth/discord/callback", async (req, res) => {
     const { id, username, avatar } = userResponse.data;
 
     // Store user info
-    users[0] = { id, username, avatar }; // Consider improving to store multiple users
+    users[id] = { id, username, avatar }; // Store multiple users based on their ID
 
     // Fetch user's guilds
     const guildsResponse = await axios.get("https://discord.com/api/users/@me/guilds", {
@@ -102,11 +131,10 @@ router.get("/auth/discord/callback", async (req, res) => {
     );
 
     // Check if bot is in those guilds
-    const botInGuilds = await Promise.all(
+    await Promise.all(
       managedGuilds.map(async guild => {
-        console.log(`Fetching bot member for guild ID: ${guild.id}`);
         try {
-          const botInGuildResponse = await axios.get(
+          await axios.get(
             `https://discord.com/api/guilds/${guild.id}/members/${process.env.BOT_ID}`,
             {
               headers: {
@@ -114,10 +142,10 @@ router.get("/auth/discord/callback", async (req, res) => {
               },
             }
           );
-          return { guild, botInGuild: true };
+          guild.botInGuild = true; // Mark bot as in the guild
         } catch (error) {
           if (error.response && error.response.status === 404) {
-            return { guild, botInGuild: false };
+            guild.botInGuild = false; // Bot is not in the guild
           } else {
             console.error(error.response.data);
             throw error;
@@ -126,7 +154,6 @@ router.get("/auth/discord/callback", async (req, res) => {
       })
     );
 
-    console.log(botInGuilds);
     res.redirect(process.env.CLIENT_REDIRECT_URL); // Redirect to client
   } catch (error) {
     console.error("Error in Discord callback:", error.response ? error.response.data : error);
@@ -151,8 +178,7 @@ app.get('/guilds', async (req, res) => {
         banner: guild.banner,
         owner: guild.owner,
         permissions: guild.permissions,
-        permissions_new: guild.permissions_new,
-        features: guild.features, // Giả sử features là một mảng
+        features: guild.features,
       },
       botInGuild: guild.botInGuild,
     }));
