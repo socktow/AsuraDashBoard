@@ -13,7 +13,7 @@ const { Text, Link } = Typography;
 
 const CustomFooter = () => {
   return (
-    <Footer className="bg-gray-800 text-white py-6">
+    <Footer className="bg-transparent text-white py-6">
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
         {/* Copyright Section */}
         <Text className="text-gray-400 text-center md:text-left">

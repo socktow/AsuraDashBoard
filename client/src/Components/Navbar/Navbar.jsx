@@ -1,5 +1,4 @@
-// src/components/Navbar.js
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   SmileOutlined,
@@ -16,20 +15,13 @@ import { fetchUserInfo, logoutUser } from "../../Redux/UserSlice";
 const Navbar = () => {
   const dispatch = useDispatch();
   const { user, status } = useSelector((state) => state.user);
-  const [menuTheme, setMenuTheme] = useState("light");
 
   useEffect(() => {
-    // Gọi API để lấy thông tin người dùng khi tải component
     if (!user && status === "idle") {
       dispatch(fetchUserInfo());
     }
   }, [dispatch, user, status]);
 
-  const changeTheme = (value) => {
-    setMenuTheme(value ? "dark" : "light");
-  };
-
-  // Dropdown menu for User Info and Guilds
   const userMenu = (
     <Menu>
       <Menu.Item key="userInfo">
@@ -50,23 +42,14 @@ const Navbar = () => {
 
   return (
     <header
-      className={`flex justify-between items-center p-4 fixed top-0 left-0 w-full z-10 ${
-        menuTheme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"
-      }`}
+      className={`flex justify-between items-center p-4 fixed top-0 left-0 w-full z-10`}
+      style={{ height: '70px' }} // Đảm bảo chiều cao của Navbar bằng chiều cao của Footer
     >
       <div className="text-xl font-bold">
         <Link to="/">Asuna BOT</Link>
       </div>
       <div className="flex items-center">
-        <label className="mr-4">
-          <input
-            type="checkbox"
-            onChange={(e) => changeTheme(e.target.checked)}
-            className="toggle"
-          />
-          <span className="ml-2">{menuTheme === "dark" ? "Light" : "Dark"}</span>
-        </label>
-        <nav className="flex space-x-4">
+        <nav className="flex space-x-6"> {/* Tăng khoảng cách giữa các link */}
           {user ? (
             <Dropdown overlay={userMenu} trigger={["click"]}>
               <span className="ml-4 cursor-pointer flex items-center">

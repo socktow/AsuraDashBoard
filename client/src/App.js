@@ -8,12 +8,14 @@ import GuildsPage from "./Components/GuildsPage/GuildsPage";
 import MainLayout from "./Layout/MainLayout";
 import AdminLayout from "./Layout/AdminLayout";
 import Login from "./Pages/Login";
+import Shop from "./Pages/Shop";
 function App() {
   return (
     <Provider store={store}>
       <Router>
         <Routes>
           <Route path="/" element={<MainLayout />}>
+            <Route index element={<Shop />} />
             <Route path="user" element={<UserInfoPage />} />
             <Route path="guilds" element={<GuildsPage />} />
             <Route path="Login" element={<Login />} />
@@ -22,7 +24,7 @@ function App() {
         </Routes>
       </Router>
     </Provider>
-  )
+  );
 }
 
 export default App;
