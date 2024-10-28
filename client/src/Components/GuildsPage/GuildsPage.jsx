@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom"; // Import Link để điều hướng
-import guildApi from "../../Api/guildApi";
+import guildApi from "../../Api/Api";
 import Guilds from "./Guilds";
 
 function GuildsPage() {

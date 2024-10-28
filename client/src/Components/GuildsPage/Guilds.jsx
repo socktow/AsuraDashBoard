@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, Col, Row, Button, Spin } from "antd"; 
 import { Link } from "react-router-dom";
-import guildApi from "../../Api/guildApi";
+import guildApi from "../../Api/Api";
 
 function Guilds() {
   const [guilds, setGuilds] = useState([]);
