@@ -1,14 +1,18 @@
+// router/guildRoutes.js
 const express = require("express");
-const router = express.Router();
+const axios = require("axios");
 
-router.get('/', async (req, res) => {
-  try {
-    if (!client.isReady()) {
-      return res.status(503).json({ error: 'Discord client is not ready' });
-    }
+module.exports = (client) => {
+  const router = express.Router();
+  let managedGuilds = [];
 
-    const response = managedGuilds.map(guild => ({
-      guild: {
+  router.get("/", async (req, res) => {
+    try {
+      if (!client.isReady()) {
+        return res.status(503).json({ error: "Discord client is not ready" });
+      }
+
+      const response = managedGuilds.map(guild => ({
         id: guild.id,
         name: guild.name,
         icon: guild.icon,
@@ -16,15 +20,15 @@ router.get('/', async (req, res) => {
         owner: guild.owner,
         permissions: guild.permissions,
         features: guild.features,
-      },
-      botInGuild: guild.botInGuild,
-    }));
+        botInGuild: guild.botInGuild,
+      }));
 
-    res.json(response);
-  } catch (error) {
-    console.error('Error fetching guilds:', error);
-    res.status(500).json({ error: 'Failed to fetch guilds' });
-  }
-});
+      res.json(response);
+    } catch (error) {
+      console.error("Error fetching guilds:", error);
+      res.status(500).json({ error: "Failed to fetch guilds" });
+    }
+  });
 
-module.exports = router;
+  return router;
+};

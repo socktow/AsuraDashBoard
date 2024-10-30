@@ -10,6 +10,7 @@ html {
   align-items: center;
   height: 100vh;
 }
+
 * {
   margin: 0;
   box-sizing: border-box; /* Thêm box-sizing để kiểm soát kích thước phần tử */
@@ -23,14 +24,15 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family: 'Poppins';
-  min-height: 100vh; /* Đảm bảo body có chiều cao tối thiểu */
+  min-height: 100vh; 
+  padding-top: 100px; 
 }
 
 header {
-  position: sticky; /* Dán navbar vào đầu trang */
-  top: 0; /* Ở trên cùng */
-  z-index: 1000; /* Đảm bảo navbar ở trên cùng */
-  width: 100%; /* Đảm bảo navbar chiếm toàn bộ chiều rộng */
+  position: sticky; 
+  top: 0; 
+  z-index: 1000; 
+  width: 100%; 
 }
 
 code {

@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Card, Col, Row, Button, Spin } from "antd"; 
+import { Card, Col, Row, Button, Spin, Typography } from "antd"; 
 import { Link } from "react-router-dom";
 import guildApi from "../../Api/Api";
+import "animate.css"; // Ensure this is imported
+
+const { Title, Paragraph } = Typography;
 
 function Guilds() {
   const [guilds, setGuilds] = useState([]);
@@ -29,55 +32,57 @@ function Guilds() {
   const guildsWithoutBot = guilds.filter(guild => !guild.botInGuild);  
 
   if (loading) return <Spin tip="Loading guilds..." size="large" />; // Show loading spinner
-  if (error) return <p className="text-red-500">{error}</p>; // Show error message
+  if (error) return <Paragraph className="text-red-500">{error}</Paragraph>; // Show error message
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-semibold mb-4">Your Guilds:</h2>
+    <div className="p-4 mt-96">
+      <div className="mb-6">
+        <Title level={3} className="text-xl font-semibold ">Guilds with Bots:</Title>
+        {guildsWithBot.length > 0 ? (
+          <Row gutter={[16, 16]}>
+            {guildsWithBot.map((guild) => (
+              <Col span={8} key={guild.guild.id} className="mb-4 animate__animated animate__fadeIn">
+                <Link to={`/guilds/${guild.guild.id}`}>
+                  <Card 
+                    hoverable 
+                    className="bg-gray-100 transition-shadow duration-300 hover:shadow-lg animate__animated animate__zoomIn"
+                  >
+                    <Title level={4} className="text-lg font-bold">{guild.guild.name}</Title>
+                    <Paragraph className="text-sm text-gray-500">{guild.guild.owner ? "Owner" : "Member"}</Paragraph>
+                    <Paragraph className="text-sm text-green-500">Available</Paragraph>
+                  </Card>
+                </Link>
+              </Col>
+            ))}
+          </Row>
+        ) : (
+          <Paragraph className="text-gray-500">No guilds with bots available.</Paragraph>
+        )}
+      </div>
 
-      <h3 className="text-xl font-semibold mb-2">Guilds with Bots:</h3>
-      {guildsWithBot.length > 0 ? (
-        <Row gutter={16}>
-          {guildsWithBot.map((guild) => (
-            <Col span={8} key={guild.guild.id} className="mb-4">
-              <Link to={`/guilds/${guild.guild.id}`}>
-                <Card 
-                  hoverable 
-                  className="bg-gray-100 transition-shadow duration-300 hover:shadow-lg"
-                >
-                  <h3 className="text-lg font-bold">{guild.guild.name}</h3>
-                  <p className="text-sm text-gray-500">{guild.guild.owner ? "Owner" : "Member"}</p>
-                  <p className="text-sm text-green-500">Available</p>
-                </Card>
-              </Link>
-            </Col>
-          ))}
-        </Row>
-      ) : (
-        <p className="text-gray-500">No guilds with bots available.</p>
-      )}
-
-      <h3 className="text-xl font-semibold mt-4 mb-2">Guilds without Bots:</h3>
-      {guildsWithoutBot.length > 0 ? (
-        <Row gutter={16}>
-          {guildsWithoutBot.map((guild) => (
-            <Col span={8} key={guild.guild.id} className="mb-4">
-              <Link to={`/guilds/${guild.guild.id}`}>
-                <Card 
-                  hoverable 
-                  className="bg-gray-100 transition-shadow duration-300 hover:shadow-lg"
-                >
-                  <h3 className="text-lg font-bold">{guild.guild.name}</h3>
-                  <p className="text-sm text-gray-500">{guild.guild.owner ? "Owner" : "Member"}</p>
-                  <Button type="primary" className="mt-2">Invite</Button>
-                </Card>
-              </Link>
-            </Col>
-          ))}
-        </Row>
-      ) : (
-        <p className="text-gray-500">No guilds without bots available.</p>
-      )}
+      <div>
+        <Title level={3} className="text-xl font-semibold ">Guilds without Bots:</Title>
+        {guildsWithoutBot.length > 0 ? (
+          <Row gutter={[16, 16]}>
+            {guildsWithoutBot.map((guild) => (
+              <Col span={8} key={guild.guild.id} className="mb-4 animate__animated animate__fadeIn">
+                <Link to={`/guilds/${guild.guild.id}`}>
+                  <Card 
+                    hoverable 
+                    className="bg-gray-100 transition-shadow duration-300 hover:shadow-lg animate__animated animate__zoomIn"
+                  >
+                    <Title level={4} className="text-lg font-bold">{guild.guild.name}</Title>
+                    <Paragraph className="text-sm text-gray-500">{guild.guild.owner ? "Owner" : "Member"}</Paragraph>
+                    <Button type="primary" className="mt-2">Invite</Button>
+                  </Card>
+                </Link>
+              </Col>
+            ))}
+          </Row>
+        ) : (
+          <Paragraph className="text-gray-500">No guilds without bots available.</Paragraph>
+        )}
+      </div>
     </div>
   );
 }

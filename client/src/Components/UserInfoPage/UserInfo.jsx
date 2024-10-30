@@ -14,7 +14,7 @@ function UserInfo({ user }) {
   const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatarid}.png`;
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100 p-4">
+    <div className="flex justify-center items-center h-screen p-4">
       <Card className="w-full max-w-md shadow-lg rounded-lg border border-gray-200">
         <div className="flex flex-col items-center">
           <Avatar src={avatarUrl} size={80} className="mb-4" />
