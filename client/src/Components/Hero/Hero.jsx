@@ -20,7 +20,7 @@ const Hero = () => {
       {/* Text Section */}
       <div className={`lg:w-1/2 p-8 flex flex-col justify-center text-white bg-gradient-to-r ${isAnimated ? 'animate__animated animate__fadeInLeft' : ''}`}>
         <h2 className={`font-bold text-5xl lg:text-7xl mb-4 ${isAnimated ? 'animate__animated animate__fadeInDown' : ''}`}>
-          Asuna Bot Discord
+          Asura Bot Discord
         </h2>
         <p className={`text-xl mb-6 ${isAnimated ? 'animate__animated animate__fadeIn' : ''}`}>
           The ultimate bot for your Discord server, providing a seamless experience!
@@ -101,7 +101,7 @@ const Hero = () => {
       <div className="lg:w-1/2 flex justify-center items-center p-0">
         <img
           src={hero_image}
-          className={`w-full h-full object-cover ${isAnimated ? 'animate__animated animate__zoomIn' : ''}`}
+          className={`w-600 h-400 object-cover ${isAnimated ? 'animate__animated animate__zoomIn' : ''}`}
           alt="Hero"
         />
       </div>

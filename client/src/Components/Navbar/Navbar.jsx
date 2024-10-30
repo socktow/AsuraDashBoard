@@ -46,7 +46,7 @@ const Navbar = () => {
       style={{ height: '70px' }} // Đảm bảo chiều cao của Navbar bằng chiều cao của Footer
     >
       <div className="text-xl font-bold">
-        <Link to="/">Asuna BOT</Link>
+        <Link to="/">Asura BOT</Link>
       </div>
       <div className="flex items-center">
         <nav className="flex space-x-6"> {/* Tăng khoảng cách giữa các link */}
