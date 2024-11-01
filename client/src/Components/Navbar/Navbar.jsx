@@ -11,6 +11,7 @@ import {
 import { Dropdown, Menu } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUserInfo, logoutUser } from "../../Redux/UserSlice";
+import "./Navbar.css";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -32,6 +33,11 @@ const Navbar = () => {
       <Menu.Item key="guilds">
         <Link to="/guilds">
           <TeamOutlined /> Guilds
+        </Link>
+      </Menu.Item>
+      <Menu.Item key="payment">
+        <Link to="/payment">
+          <TeamOutlined /> Nạp Thẻ
         </Link>
       </Menu.Item>
       <Menu.Item key="logout" onClick={() => dispatch(logoutUser())}>
@@ -69,45 +75,40 @@ const Navbar = () => {
   );
 
   return (
-    <header
-      className="flex justify-between items-center p-4 fixed top-0 left-0 w-full z-10 shadow-md text-white bg-[#2f3136]"
-      style={{ height: '70px' }}
-    >
-      <div className="text-xl font-bold">
-        <Link to="/" className="text-white">Asura BOT</Link>
+    <header className="navbar">
+      <div className="navbar-logo">
+        <Link to="/" className="navbar-link">Asura BOT</Link>
       </div>
       
-      {/* Left-side navigation links */}
-      <nav className="flex space-x-4 text-white">
-        <Link to="/" className="text-white">/Command</Link>
-        <Link to="/patch-note" className="text-white">/Patch Note</Link>
+      <nav className="navbar-links">
+        <Link to="/" className="navbar-link">/Command</Link>
+        <Link to="/patch-note" className="navbar-link">/Patch Note</Link>
         <Dropdown overlay={aboutMenu} trigger={["click"]}>
-          <span className="cursor-pointer">/About <DownOutlined /></span>
+          <span className="navbar-dropdown">/About <DownOutlined /></span>
         </Dropdown>
         <Dropdown overlay={miscMenu} trigger={["click"]}>
-          <span className="cursor-pointer">/Misc <DownOutlined /></span>
+          <span className="navbar-dropdown">/Misc <DownOutlined /></span>
         </Dropdown>
       </nav>
 
-      {/* Right-side user menu and additional links */}
-      <div className="flex items-center space-x-6">
+      <div className="navbar-user">
         {user ? (
           <Dropdown overlay={userMenu} trigger={["click"]}>
-            <span className="ml-4 cursor-pointer flex items-center">
-              Hi, {user.username}! <DownOutlined className="ml-1" />
+            <span className="navbar-dropdown">
+              Hi, {user.username}! <DownOutlined />
             </span>
           </Dropdown>
         ) : (
-          <Link to="/login" className="flex items-center text-white">
+          <Link to="/login" className="navbar-link">
             <LoginOutlined />
             <span className="ml-1">Login</span>
           </Link>
         )}
-        <Link to="/invite" className="flex items-center text-white">
+        <Link to="/invite" className="navbar-link">
           <PlusOutlined />
           <span className="ml-1">Invite</span>
         </Link>
-        <Link to="/discord" className="flex items-center text-white">
+        <Link to="/discord" className="navbar-link">
           <SmileOutlined />
           <span className="ml-1">Discord</span>
         </Link>

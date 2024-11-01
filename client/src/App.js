@@ -9,6 +9,7 @@ import MainLayout from "./Layout/MainLayout";
 import AdminLayout from "./Layout/AdminLayout";
 import Login from "./Pages/Login";
 import Shop from "./Pages/Shop";
+import Payment from "./Components/Payment/Payment";
 function App() {
   return (
     <Provider store={store}>
@@ -19,6 +20,7 @@ function App() {
             <Route path="user" element={<UserInfoPage />} />
             <Route path="guilds" element={<GuildsPage />} />
             <Route path="Login" element={<Login />} />
+            <Route path="Payment" element={<Payment />} />
           </Route>
           <Route path="/admin" element={<AdminLayout />} />
         </Routes>
