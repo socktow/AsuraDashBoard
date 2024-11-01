@@ -7,7 +7,8 @@ const { Client, GatewayIntentBits } = require('discord.js');
 const app = express();
 const router = express.Router();
 const { Pool } = require("pg");
-
+const momoPaymentRouter = require('./Router/MomoPayment/MomoPayment');
+const ZalopaymentRouter = require('./Router/ZaloPayment/ZaloPayment');
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -182,6 +183,9 @@ app.get('/guilds', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch guilds' });
   }
 });
+// Router 
+app.use('/momo', momoPaymentRouter);
+app.use('/zalo', ZalopaymentRouter);
 
 app.listen(4000, () => {
   console.log("Server running on port 4000");
