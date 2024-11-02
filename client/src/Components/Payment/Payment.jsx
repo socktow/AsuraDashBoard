@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Card, Col, Row, Typography, Button, Layout } from 'antd';
+import { Card, Col, Row, Typography, Button, Layout, message } from 'antd';
+import MoMoPayment from './method/MoMoPayment';
+import ZaloPayment from './method/ZaloPayment'; // Import ZaloPayment component
 
 const { Title, Text } = Typography;
 const { Content } = Layout;
@@ -24,9 +26,17 @@ const Payment = () => {
   };
 
   return (
-    <Layout style={{ minHeight: '100vh', backgroundColor: '#fff' }}>
+    <Layout style={{ minHeight: '100vh', backgroundColor: '#f0f2f5' }}>
       <Content style={{ padding: '20px' }}>
-        <div style={{ display: 'flex', padding: '20px', backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)' }}>
+        <div
+          style={{
+            display: 'flex',
+            padding: '20px',
+            backgroundColor: '#fff',
+            borderRadius: '8px',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+          }}
+        >
           {/* Left Section for Denominations */}
           <div style={{ flex: 1 }}>
             <Title level={4}>Chọn Mệnh Giá Nạp Thẻ</Title>
@@ -37,7 +47,7 @@ const Payment = () => {
                     style={{
                       textAlign: 'center',
                       cursor: 'pointer',
-                      height: '150px', // Set a fixed height for the cards
+                      height: '150px',
                       backgroundColor: selectedAmount === value ? '#e6f7ff' : '#fff',
                       border: selectedAmount === value ? '2px solid #1890ff' : '1px solid #d9d9d9',
                     }}
@@ -49,21 +59,10 @@ const Payment = () => {
               ))}
             </Row>
             <div style={{ marginTop: '20px' }}>
-              <Button
-                type="primary"
-                style={{ marginRight: '10px' }}
-                onClick={() => alert(`Nạp thẻ ${selectedAmount} VND qua MoMo`)}
-                disabled={!selectedAmount}
-              >
-                Nạp Thẻ MoMo
-              </Button>
-              <Button
-                type="primary"
-                onClick={() => alert(`Nạp thẻ ${selectedAmount} VND qua ZaloPay`)}
-                disabled={!selectedAmount}
-              >
-                Nạp Thẻ ZaloPay
-              </Button>
+              {/* MoMoPayment button */}
+              {selectedAmount && <MoMoPayment selectedAmount={selectedAmount} />}
+              {/* ZaloPayment button */}
+              {selectedAmount && <ZaloPayment selectedAmount={selectedAmount} />}
             </div>
           </div>
 

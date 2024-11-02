@@ -10,7 +10,7 @@ router.use(express.urlencoded({ extended: true }));
 router.post("/payment", async (req, res) => {
   try {
     const momoConfig = config.momoConfig;
-    const amount = 20000;
+    const { amount } = req.body; 
     const orderId = momoConfig.partnerCode + new Date().getTime();
     const requestId = orderId;
     const orderInfo = `Asuna - ${orderId}`;

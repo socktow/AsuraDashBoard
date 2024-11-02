@@ -14,7 +14,7 @@ function Guilds() {
     const fetchGuilds = async () => {
       try {
         const response = await guildApi.getUserGuilds();
-        setGuilds(response.data); // Assuming response.data contains the guilds array
+        setGuilds(response.data);
       } catch (err) {
         setError("Failed to fetch guilds. Please try again later.");
         console.error(err);

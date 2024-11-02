@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Card, Avatar, Typography } from "antd";
 import "tailwindcss/tailwind.css";
 
@@ -8,7 +9,9 @@ function formatCurrency(amount) {
   return parseInt(amount).toLocaleString("en-US");
 }
 
-function UserInfo({ user }) {
+function UserInfo() {
+  const { user } = useSelector((state) => state.user);
+
   if (!user) return <span>Not logged in.</span>;
 
   const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatarid}.png`;
