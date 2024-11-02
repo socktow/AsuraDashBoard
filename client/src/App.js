@@ -10,7 +10,7 @@ import Shop from "./Pages/Shop";
 import Payment from "./Components/Payment/Payment";
 import UserInfo from "./Components/UserInfoPage/UserInfo";
 import Guilds from "./Components/GuildsPage/Guilds";
-import PaymentSuccess from "./Components/testpayment/PaymentSuccess";
+import PaymentSuccess from "./Components/PaymentResults/PaymentSuccess";
 function App() {
   return (
     <Provider store={store}>

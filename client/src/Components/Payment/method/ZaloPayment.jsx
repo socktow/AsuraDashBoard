@@ -1,11 +1,11 @@
 import React from 'react';
-import { Button, message } from 'antd';
+import { message } from 'antd';
 import api from '../../../Api/Api'; // Adjust the import based on your file structure
+import 'animate.css';
 
 const ZaloPayment = ({ selectedAmount }) => {
   const handleZaloPayment = async () => {
     try {
-      // Prepare the payload for Zalo payment
       const orderInfo = {
         amount: selectedAmount,
         productName: 'Recharge',
@@ -14,10 +14,8 @@ const ZaloPayment = ({ selectedAmount }) => {
 
       const response = await api.createZaloPayment(orderInfo);
       
-      // Check if the payment was successful
       if (response.return_code === 1 && response.sub_return_code === 1) {
         message.success('ZaloPay payment link created successfully!');
-        // Redirect to the ZaloPay order URL
         window.location.href = response.order_url;
       } else {
         message.error('Failed to create ZaloPay payment link. Please try again.');
@@ -30,9 +28,14 @@ const ZaloPayment = ({ selectedAmount }) => {
   };
 
   return (
-    <Button type="primary" onClick={handleZaloPayment} style={{ marginTop: '20px' }}>
+    <button 
+      onClick={handleZaloPayment} 
+      className="w-full h-12 rounded-lg bg-black text-white transition-all duration-300 
+        hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 flex items-center justify-center"
+    >
+      <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-ZaloPay-Square.png" alt="ZaloPay Logo" className="w-6 h-6 mr-2" />
       Thanh Toán Bằng ZaloPay
-    </Button>
+    </button>
   );
 };
 
