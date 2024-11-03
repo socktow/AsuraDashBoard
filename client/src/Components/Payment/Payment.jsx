@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
 import MoMoPayment from './method/MoMoPayment';
 import ZaloPayment from './method/ZaloPayment';
+import { useSelector } from 'react-redux';
 
 const Payment = () => {
   const [selectedAmount, setSelectedAmount] = useState(null);
+  const { user } = useSelector((state) => state.user);
+
+  const [isEditingId, setIsEditingId] = useState(false);
+  const [newUserId, setNewUserId] = useState(user?.id || '');
+
+  if (!user) return <span>Not logged in.</span>;
   const coinMultiplier = 10;
 
   const amounts = [
@@ -15,15 +22,26 @@ const Payment = () => {
     { value: 1000000, label: '1,000,000 VND' },
   ];
 
-  // Function to handle amount selection
   const handleSelectAmount = (value) => {
     setSelectedAmount(value);
+  };
+
+  const handleEditIdToggle = () => {
+    setIsEditingId(!isEditingId);
+  };
+
+  const handleIdChange = (e) => {
+    setNewUserId(e.target.value);
+  };
+
+  const handleSaveId = () => {
+    // Here you could dispatch an action to save the new ID to the store or make an API call.
+    setIsEditingId(false);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-r flex items-center justify-center">
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-3xl">
-        {/* Left Section for Denominations */}
         <div>
           <h2 className="text-2xl font-bold mb-4 text-black">Chọn Mệnh Giá Nạp Thẻ</h2>
           <div className="grid grid-cols-3 gap-4">
@@ -47,6 +65,31 @@ const Payment = () => {
             )}
           </div>
         </div>
+        
+        {/* User ID Section */}
+        <div className="mt-8 border-t pt-4">
+          <h2 className="text-2xl font-bold mb-4 text-black">Thông Tin Người Dùng</h2>
+          <div className="flex items-center">
+            {isEditingId ? (
+              <input
+                type="text"
+                value={newUserId}
+                onChange={handleIdChange}
+                className="border px-2 py-1 text-black rounded"
+              />
+            ) : (
+              <p className="text-lg text-black">User ID: {user.id}</p>
+            )}
+            <button
+              onClick={isEditingId ? handleSaveId : handleEditIdToggle}
+              className="ml-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+            >
+              {isEditingId ? 'Lưu' : 'Thay Đổi ID'}
+            </button>
+          </div>
+        </div>
+
+        {/* Payment Information Section */}
         <div className="mt-8 border-t pt-4">
           <h2 className="text-2xl font-bold mb-4 text-black">Thông Tin Giá Nạp</h2>
           {selectedAmount ? (
