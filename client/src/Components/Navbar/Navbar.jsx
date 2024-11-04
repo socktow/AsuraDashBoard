@@ -81,7 +81,7 @@ const Navbar = () => {
       </div>
       
       <nav className="navbar-links">
-        <Link to="/" className="navbar-link">/Command</Link>
+        <Link to="/commands" className="navbar-link">/Command</Link>
         <Link to="/patch-note" className="navbar-link">/Patch Note</Link>
         <Dropdown overlay={aboutMenu} trigger={["click"]}>
           <span className="navbar-dropdown">/About <DownOutlined /></span>

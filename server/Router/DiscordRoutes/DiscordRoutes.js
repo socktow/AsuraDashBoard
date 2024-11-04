@@ -2,34 +2,38 @@ const express = require("express");
 const axios = require("axios");
 const router = express.Router();
 const { Pool } = require("pg");
+const config = require('../../config.json'); // Load config.json
 
+// Initialize PostgreSQL connection
 const pool = new Pool({
-  connectionString: process.env.PsqlConnectionString,
+  connectionString: config.databaseConfig.psqlConnectionString,
 });
+
 let users = {};
 let managedGuilds = [];
 
 module.exports = (client) => {
   router.get("/auth/discord/login", (req, res) => {
     const url = `https://discord.com/oauth2/authorize?client_id=${
-      process.env.DISCORD_CLIENT_ID
+      config.botConfig.clientId
     }&response_type=code&redirect_uri=${encodeURIComponent(
-      process.env.DISCORD_REDIRECT_URI
+      config.botConfig.redirectUri
     )}&scope=identify%20guilds`;
 
     res.redirect(url);
   });
+
   router.get("/auth/discord/callback", async (req, res) => {
     if (!req.query.code) {
       return res.status(400).send("Code not provided.");
     }
     const { code } = req.query;
     const params = new URLSearchParams({
-      client_id: process.env.DISCORD_CLIENT_ID,
-      client_secret: process.env.DISCORD_CLIENT_SECRET,
+      client_id: config.botConfig.clientId,
+      client_secret: config.botConfig.clientSecret,
       grant_type: "authorization_code",
       code,
-      redirect_uri: process.env.DISCORD_REDIRECT_URI,
+      redirect_uri: config.botConfig.redirectUri,
     });
 
     try {
@@ -61,8 +65,8 @@ module.exports = (client) => {
         managedGuilds.map(async (guild) => {
           try {
             await axios.get(
-              `https://discord.com/api/guilds/${guild.id}/members/${process.env.BOT_ID}`,
-              { headers: { Authorization: `Bot ${process.env.BOT_TOKEN}` } }
+              `https://discord.com/api/guilds/${guild.id}/members/${config.botConfig.botId}`,
+              { headers: { Authorization: `Bot ${config.botConfig.token}` } }
             );
             guild.botInGuild = true;
           } catch (error) {
@@ -74,7 +78,7 @@ module.exports = (client) => {
         })
       );
 
-      res.redirect(process.env.CLIENT_REDIRECT_URL);
+      res.redirect(config.botConfig.clientRedirectUrl);
     } catch (error) {
       console.error(
         "Error in Discord callback:",

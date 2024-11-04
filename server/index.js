@@ -1,11 +1,12 @@
 const express = require("express");
-require("dotenv").config();
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const { Client, GatewayIntentBits } = require('discord.js');
+const config = require('./config.json');
+
 const app = express();
 
-// Initialize Discord client
+// Initialize Discord client with token from config
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -13,7 +14,7 @@ const client = new Client({
   ],
 });
 
-client.login(process.env.BOT_TOKEN);
+client.login(config.botConfig.token);
 client.once('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
@@ -33,6 +34,7 @@ app.use('/momo', MomoPaymentRouter);
 app.use('/zalo', ZalopaymentRouter);
 app.use(DiscordRoutes);
 
-app.listen(4000, () => {
-  console.log("Server running on port 4000");
+// Use port from config
+app.listen(config.port, () => {
+  console.log(`Server running on port ${config.port}`);
 });

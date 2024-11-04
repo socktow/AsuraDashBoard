@@ -18,7 +18,7 @@ const Hero = () => {
   return (
     <div className="flex flex-col lg:flex-row items-center justify-center h-screen overflow-hidden hero">
       {/* Text Section */}
-      <div className={`lg:w-1/2 p-8 flex flex-col justify-center text-white bg-gradient-to-r ${isAnimated ? 'animate__animated animate__fadeInLeft' : ''}`}>
+      <div className={`p-8 flex flex-col justify-center text-white bg-gradient-to-r ${isAnimated ? 'animate__animated animate__fadeInLeft' : ''}`}>
         <h2 className={`font-bold text-5xl lg:text-7xl mb-4 ${isAnimated ? 'animate__animated animate__fadeInDown' : ''}`}>
           Asura Bot Discord
         </h2>
@@ -26,7 +26,7 @@ const Hero = () => {
           The ultimate bot for your Discord server, providing a seamless experience!
         </p>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2"> {/* Sử dụng grid để chia nút thành 2 hàng */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2"> 
           {/* Invite Bot Button */}
           <Button
             type="primary"

@@ -13,18 +13,13 @@ html {
 
 * {
   margin: 0;
-  box-sizing: border-box; /* Thêm box-sizing để kiểm soát kích thước phần tử */
 }
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family: 'Poppins';
-  min-height: 100vh; 
   padding-top: 100px; 
 }
 
