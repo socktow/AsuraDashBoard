@@ -20,7 +20,7 @@ async function fetchFromDatabase(query, params, res, notFoundMessage) {
   }
 }
 router.get("/guilds", (req, res) => {
-  fetchFromDatabase("SELECT * FROM public.guildconfigs ORDER BY id ASC", null, res, "No guild configurations found");
+  fetchFromDatabase("SELECT * FROM public.guildconfigs", null, res, "No guild configurations found");
 });
 
 router.get("/guilds/:guildid", (req, res) => {

@@ -20,7 +20,7 @@ async function fetchFromDatabase(query, params, res, notFoundMessage) {
   }
 }
 router.get("/users", (req, res) => {
-  fetchFromDatabase("SELECT * FROM public.discorduser ORDER BY id ASC", null, res, "No users found");
+  fetchFromDatabase("SELECT * FROM public.discorduser", null, res, "No users found");
 });
 router.get("/users/:id", (req, res) => {
   fetchFromDatabase("SELECT * FROM public.discorduser WHERE userid = $1", [req.params.id], res, "User not found");

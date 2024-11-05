@@ -19,6 +19,7 @@ import Staff from "./Pages/About/Staff";
 import Privacy from "./Pages/Misc/Privacy";
 import Term from "./Pages/Misc/Term";
 import NewEmbedBuilder from "./Pages/Misc/NewEmbedBuilder";
+import Placeholder from "./Pages/Misc/Placeholder";
 function App() {
   return (
     <Provider store={store}>
@@ -40,6 +41,7 @@ function App() {
             <Route path="Misc/Privacy" element={<Privacy />} />
             <Route path="Misc/Term" element={<Term/>} />
             <Route path="Misc/New-Embed-Builder" element={<NewEmbedBuilder/>} />
+            <Route path="Misc/Placeholder" element={<Placeholder />} />
           </Route>
           <Route path="/admin" element={<AdminLayout />} />
         </Routes>

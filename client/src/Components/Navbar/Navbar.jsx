@@ -71,6 +71,9 @@ const Navbar = () => {
       <Menu.Item key="embedBuilder">
         <Link to="/misc/new-embed-builder">New Embed Builder</Link>
       </Menu.Item>
+      <Menu.Item key="placeholder">
+        <Link to="/misc/placeholder">Placeholder</Link>
+      </Menu.Item>
     </Menu>
   );
 
@@ -81,13 +84,13 @@ const Navbar = () => {
       </div>
       
       <nav className="navbar-links">
-        <Link to="/commands" className="navbar-link">/Command</Link>
-        <Link to="/patch-note" className="navbar-link">/Patch Note</Link>
+        <Link to="/commands" className="navbar-link">Command</Link>
+        <Link to="/patch-note" className="navbar-link">Patch Note</Link>
         <Dropdown overlay={aboutMenu} trigger={["click"]}>
-          <span className="navbar-dropdown">/About <DownOutlined /></span>
+          <span className="navbar-dropdown">About <DownOutlined /></span>
         </Dropdown>
         <Dropdown overlay={miscMenu} trigger={["click"]}>
-          <span className="navbar-dropdown">/Misc <DownOutlined /></span>
+          <span className="navbar-dropdown">Misc <DownOutlined /></span>
         </Dropdown>
       </nav>
 
