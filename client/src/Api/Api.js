@@ -14,6 +14,7 @@ const apiCall = async (endpoint, data) => {
 const api = {
   getUserGuilds: () => axios.get(`${BASE_URL}/guilds`),
   getUserInfo: () => axios.get(`${BASE_URL}/user/me`),
+  getGuildById: (guildId) => axios.get(`${BASE_URL}/api/guilds/${guildId}`), // Fix here
   // Payment Method
   createMomoPayment: (amount, orderInfo) => apiCall("momo/payment", { amount, orderInfo }),
   checkMomoPayment: (orderId) => apiCall("momo/checkmomopayment", { orderId }),

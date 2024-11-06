@@ -20,6 +20,7 @@ import Privacy from "./Pages/Misc/Privacy";
 import Term from "./Pages/Misc/Term";
 import NewEmbedBuilder from "./Pages/Misc/NewEmbedBuilder";
 import Placeholder from "./Pages/Misc/Placeholder";
+import GuildsInfo from "./Components/GuildsPage/GuildsInfo";
 function App() {
   return (
     <Provider store={store}>
@@ -29,6 +30,7 @@ function App() {
             <Route index element={<Shop />} />
             <Route path="user" element={<UserInfo />} />
             <Route path="guilds" element={<Guilds />} />
+            <Route path="guilds/:guildId" element={<GuildsInfo />} />
             <Route path="Login" element={<Login />} />
             <Route path="Payment" element={<Payment />} />
             <Route path="PaymentSuccess" element={<PaymentSuccess />} />
