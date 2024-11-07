@@ -2,13 +2,11 @@ import React, { useState } from 'react';
 import MoMoPayment from './method/MoMoPayment';
 import ZaloPayment from './method/ZaloPayment';
 import { useSelector } from 'react-redux';
+import './Payment.scss'; // Import the SCSS file for custom styling
 
 const Payment = () => {
   const [selectedAmount, setSelectedAmount] = useState(null);
   const { user } = useSelector((state) => state.user);
-
-  const [isEditingId, setIsEditingId] = useState(false);
-  const [newUserId, setNewUserId] = useState(user?.id || '');
 
   if (!user) return <span>Not logged in.</span>;
   const coinMultiplier = 10;
@@ -26,78 +24,45 @@ const Payment = () => {
     setSelectedAmount(value);
   };
 
-  const handleEditIdToggle = () => {
-    setIsEditingId(!isEditingId);
-  };
-
-  const handleIdChange = (e) => {
-    setNewUserId(e.target.value);
-  };
-
-  const handleSaveId = () => {
-    // Here you could dispatch an action to save the new ID to the store or make an API call.
-    setIsEditingId(false);
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-r flex items-center justify-center">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-3xl">
-        <div>
-          <h2 className="text-2xl font-bold mb-4 text-black">Chọn Mệnh Giá Nạp Thẻ</h2>
-          <div className="grid grid-cols-3 gap-4">
-            {amounts.map(({ value, label }) => (
-              <div
-                key={value}
-                className={`cursor-pointer flex items-center justify-center h-40 rounded-lg transition-colors 
-                  ${selectedAmount === value ? 'bg-blue-100 border-2 border-blue-500' : 'bg-white border'}`}
-                onClick={() => handleSelectAmount(value)}
-              >
-                <h3 className="text-lg font-semibold text-black">{label}</h3>
-              </div>
-            ))}
-          </div>
-          <div className="mt-6 flex justify-between">
-            {selectedAmount && (
-              <>
-                <MoMoPayment selectedAmount={selectedAmount} />
-                <ZaloPayment selectedAmount={selectedAmount} />
-              </>
-            )}
-          </div>
+    <div className="payment-container">
+      <div className="payment-card">
+        <div className="payment-title">
+          <h2>Chọn Mệnh Giá Nạp Thẻ</h2>
         </div>
-        
-        {/* User ID Section */}
-        <div className="mt-8 border-t pt-4">
-          <h2 className="text-2xl font-bold mb-4 text-black">Thông Tin Người Dùng</h2>
-          <div className="flex items-center">
-            {isEditingId ? (
-              <input
-                type="text"
-                value={newUserId}
-                onChange={handleIdChange}
-                className="border px-2 py-1 text-black rounded"
-              />
-            ) : (
-              <p className="text-lg text-black">User ID: {user.id}</p>
-            )}
-            <button
-              onClick={isEditingId ? handleSaveId : handleEditIdToggle}
-              className="ml-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+        <div className="amounts-grid">
+          {amounts.map(({ value, label }) => (
+            <div
+              key={value}
+              className={`amount-item ${selectedAmount === value ? 'selected' : ''}`}
+              onClick={() => handleSelectAmount(value)}
             >
-              {isEditingId ? 'Lưu' : 'Thay Đổi ID'}
-            </button>
-          </div>
+              <h3>{label}</h3>
+            </div>
+          ))}
+        </div>
+        <div className="payment-methods">
+          {selectedAmount && (
+            <>
+              <MoMoPayment selectedAmount={selectedAmount} />
+              <ZaloPayment selectedAmount={selectedAmount} />
+            </>
+          )}
         </div>
 
-        {/* Payment Information Section */}
-        <div className="mt-8 border-t pt-4">
-          <h2 className="text-2xl font-bold mb-4 text-black">Thông Tin Giá Nạp</h2>
+        <div className="user-info">
+          <h2>Thông Tin Người Dùng</h2>
+          <p>User ID: {user.id}</p>
+        </div>
+
+        <div className="payment-info">
+          <h2>Thông Tin Giá Nạp</h2>
           {selectedAmount ? (
-            <p className="text-lg text-black">
+            <p>
               {selectedAmount} VND = {selectedAmount * coinMultiplier} Coin
             </p>
           ) : (
-            <p className="text-lg text-black">Vui lòng chọn mệnh giá để xem thông tin.</p>
+            <p>Vui lòng chọn mệnh giá để xem thông tin.</p>
           )}
         </div>
       </div>

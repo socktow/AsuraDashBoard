@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { Dropdown, Menu} from "antd";
 import {
   SmileOutlined,
   TeamOutlined,
@@ -8,10 +10,8 @@ import {
   LoginOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { Dropdown, Menu } from "antd";
-import { useSelector, useDispatch } from "react-redux";
 import { fetchUserInfo, logoutUser } from "../../Redux/UserSlice";
-import "./Navbar.css";
+import "./Navbar.scss";
 
 const Navbar = () => {
   const dispatch = useDispatch();

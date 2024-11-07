@@ -33,6 +33,9 @@ function UserInfo() {
           <Text strong className="block">
             Currency: <Text>{formatCurrency(user.currencyAmount)}</Text>
           </Text>
+          <Text strong className="block">
+            Bank: <Text>{formatCurrency(user.bankBalance)}</Text>
+          </Text>
         </div>
       </Card>
     </div>

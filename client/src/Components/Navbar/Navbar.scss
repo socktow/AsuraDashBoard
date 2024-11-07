@@ -1,0 +1,121 @@
+// Navbar.scss
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #2f3136;
+  padding: 1rem 2rem;
+  color: #ecf0f1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  .navbar-logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+
+    .navbar-link {
+      color: #ecf0f1;
+      text-decoration: none;
+      &:hover {
+        color: #3498db;
+      }
+    }
+  }
+
+  .navbar-links {
+    display: flex;
+    gap: 1.5rem;
+
+    .navbar-link {
+      color: #ecf0f1;
+      text-decoration: none;
+      font-size: 1rem;
+      &:hover {
+        color: #3498db;
+      }
+    }
+
+    .navbar-dropdown {
+      color: #ecf0f1;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+
+      &:hover {
+        color: #3498db;
+      }
+
+      .anticon-down {
+        margin-left: 0.3rem;
+      }
+    }
+  }
+
+  .navbar-user {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .navbar-link {
+      color: #ecf0f1;
+      display: flex;
+      align-items: center;
+      font-size: 1rem;
+      text-decoration: none;
+
+      &:hover {
+        color: #3498db;
+      }
+
+      .ml-1 {
+        margin-left: 0.3rem;
+      }
+    }
+
+    .navbar-dropdown {
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      color: #ecf0f1;
+
+      &:hover {
+        color: #3498db;
+      }
+
+      .anticon-down {
+        margin-left: 0.3rem;
+      }
+    }
+  }
+}
+
+// Modal styling (optional, if you need custom modal styles)
+.ant-modal-header {
+  background-color: #34495e;
+  color: #ecf0f1;
+}
+
+.ant-modal-body {
+  background-color: #2c3e50;
+}
+
+.ant-input {
+  background-color: #34495e;
+  color: #ecf0f1;
+  border: none;
+  &:focus {
+    border-color: #3498db;
+  }
+}
+
+.ant-list-item {
+  background-color: #34495e;
+  color: #ecf0f1;
+
+  a {
+    color: #3498db;
+    &:hover {
+      color: #1abc9c;
+    }
+  }
+}

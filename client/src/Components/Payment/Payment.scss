@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+.payment-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(to right, #00c6ff, #0072ff);
+}
+
+.payment-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 900px;
+  padding: 20px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.payment-title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.payment-title h2 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.amounts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.amount-item {
+  background-color: #fff;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  
+  &:hover {
+    background-color: #f0f0f0;
+  }
+
+  &.selected {
+    background-color: #0072ff;
+    border-color: #0072ff;
+    color: white;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+    color: #333;
+  }
+}
+
+.payment-methods {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.user-info {
+  margin-top: 40px;
+  border-top: 2px solid #ddd;
+  padding-top: 20px;
+  text-align: center;
+
+  h2 {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 1.2rem;
+    color: #333;
+  }
+}
+
+.payment-info {
+  margin-top: 30px;
+  text-align: center;
+
+  h2 {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 1.2rem;
+    color: #333;
+  }
+}

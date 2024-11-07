@@ -17,12 +17,23 @@ const Hero = () => {
 
   return (
     <div className="flex flex-col lg:flex-row items-center justify-center h-screen overflow-hidden hero">
-      {/* Text Section */}
-      <div className={`p-8 flex flex-col justify-center text-white bg-gradient-to-r ${isAnimated ? 'animate__animated animate__fadeInLeft' : ''}`}>
-        <h2 className={`font-bold text-5xl lg:text-7xl mb-4 ${isAnimated ? 'animate__animated animate__fadeInDown' : ''}`}>
+      <div
+        className={`p-8 flex flex-col justify-center items-center text-white bg-gradient-to-r ${
+          isAnimated ? "animate__animated animate__fadeInLeft" : ""
+        }`}
+      >
+        <h2
+          className={`font-bold text-5xl lg:text-7xl mb-4 ${
+            isAnimated ? "animate__animated animate__fadeInDown" : ""
+          }`}
+        >
           Asura Bot Discord
         </h2>
-        <p className={`text-xl mb-6 ${isAnimated ? 'animate__animated animate__fadeIn' : ''}`}>
+        <p
+          className={`text-xl mb-6 ${
+            isAnimated ? "animate__animated animate__fadeIn" : ""
+          }`}
+        >
           The ultimate bot for your Discord server, providing a seamless experience!
         </p>
 
@@ -32,12 +43,11 @@ const Hero = () => {
             type="primary"
             shape="round"
             size="large"
-            className="flex items-center transition-transform transform hover:scale-105 w-full"
+            className="flex items-center transition-transform transform hover:scale-105 w-full bg-black text-white border-white border-2"
             style={{
               height: "70px",
               fontSize: "20px",
               fontWeight: "500",
-              background: "linear-gradient(90deg, rgba(255,0,150,1) 0%, rgba(0,204,255,1) 100%)", // Gradient color
             }}
           >
             <span className="mr-2">Invite Bot</span>
@@ -49,12 +59,11 @@ const Hero = () => {
             type="default"
             shape="round"
             size="large"
-            className="flex items-center transition-transform transform hover:scale-105 w-full"
+            className="flex items-center transition-transform transform hover:scale-105 w-full bg-black text-white border-white border-2"
             style={{
               height: "70px",
               fontSize: "20px",
               fontWeight: "500",
-              background: "linear-gradient(90deg, rgba(0,204,255,1) 0%, rgba(255,0,150,1) 100%)", // Gradient color
             }}
           >
             <span className="mr-2">Discord Support</span>
@@ -66,12 +75,11 @@ const Hero = () => {
             type="default"
             shape="round"
             size="large"
-            className="flex items-center transition-transform transform hover:scale-105 w-full"
+            className="flex items-center transition-transform transform hover:scale-105 w-full bg-black text-white border-white border-2"
             style={{
               height: "70px",
               fontSize: "20px",
               fontWeight: "500",
-              background: "linear-gradient(90deg, rgba(255,204,0,1) 0%, rgba(0,255,150,1) 100%)", // Gradient color
             }}
           >
             <span className="mr-2">Embed Builder</span>
@@ -83,12 +91,11 @@ const Hero = () => {
             type="default"
             shape="round"
             size="large"
-            className="flex items-center transition-transform transform hover:scale-105 w-full"
+            className="flex items-center transition-transform transform hover:scale-105 w-full bg-black text-white border-white border-2"
             style={{
               height: "70px",
               fontSize: "20px",
               fontWeight: "500",
-              background: "linear-gradient(90deg, rgba(0,150,255,1) 0%, rgba(255,0,204,1) 100%)", // Gradient color
             }}
           >
             <span className="mr-2">Placeholder</span>
@@ -101,7 +108,7 @@ const Hero = () => {
       <div className="lg:w-1/2 flex justify-center items-center p-0">
         <img
           src={hero_image}
-          className={`w-600 h-400 object-cover ${isAnimated ? 'animate__animated animate__zoomIn' : ''}`}
+          className={`w-1/2 h-auto max-w-600 ${isAnimated ? "animate__animated animate__zoomIn" : ""}`}
           alt="Hero"
         />
       </div>
