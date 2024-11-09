@@ -1,0 +1,133 @@
+.game-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* Aligns top of the game container and history */
+  max-width: 800px; /* Sets a max-width for a centered layout */
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Game section styling */
+.game-content {
+  width: 60%;
+  text-align: center;
+}
+
+/* Game header */
+.game-header h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.game-header p {
+  font-size: 16px;
+  color: #666;
+}
+
+/* Bet options */
+.bet-options {
+  margin: 20px 0;
+}
+
+.bet-options p {
+  font-size: 18px;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+.bet-options button {
+  padding: 10px 20px;
+  margin: 0 10px;
+  font-size: 16px;
+  cursor: pointer;
+  border: 2px solid #007bff;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #007bff;
+  transition: all 0.3s;
+}
+
+.bet-options button.active {
+  background-color: #007bff;
+  color: #fff;
+}
+
+/* Unit selection */
+.unit-selection p {
+  font-size: 18px;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+.unit-selection button {
+  padding: 8px 16px;
+  margin: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  border: 2px solid #28a745;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #28a745;
+  transition: all 0.3s;
+}
+
+.unit-selection button.selected {
+  background-color: #28a745;
+  color: #fff;
+}
+
+/* Start button */
+.start-button {
+  padding: 12px 24px;
+  font-size: 18px;
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.3s;
+}
+
+.start-button:hover {
+  background-color: #c82333;
+}
+
+/* History table container */
+.history {
+  width: 35%; /* Adjusts the width for side-by-side layout */
+}
+
+.history table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.history th,
+.history td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.history th {
+  background-color: #f2f2f2;
+  color: #333;
+}
+
+/* Optional adjustment for mobile */
+@media (max-width: 768px) {
+  .game-container {
+    flex-direction: column; /* Stacks content vertically on smaller screens */
+  }
+  .history,
+  .game-content {
+    width: 100%; /* Full width for mobile */
+  }
+}

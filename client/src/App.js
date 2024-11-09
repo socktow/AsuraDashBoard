@@ -21,6 +21,7 @@ import Term from "./Pages/Misc/Term";
 import NewEmbedBuilder from "./Pages/Misc/NewEmbedBuilder";
 import Placeholder from "./Pages/Misc/Placeholder";
 import GuildsInfo from "./Components/GuildsPage/GuildsInfo";
+import Trochoiduquay from "./Components/Trochoiduquay/Trochoiduquay";
 function App() {
   return (
     <Provider store={store}>
@@ -34,6 +35,7 @@ function App() {
             <Route path="Login" element={<Login />} />
             <Route path="Payment" element={<Payment />} />
             <Route path="PaymentSuccess" element={<PaymentSuccess />} />
+            <Route path="Duquay" element={<Trochoiduquay />} />
             {/* Single Page */}
             <Route path="Commands" element={<Commands />} />
             <Route path="Patch-Note" element={<PatchNote />} />
