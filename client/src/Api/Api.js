@@ -1,6 +1,8 @@
 import axios from "axios";
 
 const BASE_URL = "http://localhost:4000";
+
+// Hàm gọi API chung
 const apiCall = async (endpoint, data) => {
   try {
     const response = await axios.post(`${BASE_URL}/${endpoint}`, data);
@@ -12,9 +14,10 @@ const apiCall = async (endpoint, data) => {
 };
 
 const api = {
-  getUserGuilds: () => axios.get(`${BASE_URL}/guilds`),
+  getUserInfoById: (userId) => axios.get(`${BASE_URL}/api/users/${userId}`), 
   getUserInfo: () => axios.get(`${BASE_URL}/user/me`),
-  getGuildById: (guildId) => axios.get(`${BASE_URL}/api/guilds/${guildId}`), // Fix here
+  getUserGuilds: () => axios.get(`${BASE_URL}/guilds`),
+  getGuildById: (guildId) => axios.get(`${BASE_URL}/api/guilds/${guildId}`),
   // Payment Method
   createMomoPayment: (amount, orderInfo) => apiCall("momo/payment", { amount, orderInfo }),
   checkMomoPayment: (orderId) => apiCall("momo/checkmomopayment", { orderId }),

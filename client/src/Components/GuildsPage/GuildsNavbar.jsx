@@ -5,23 +5,21 @@ import guildApi from "../../Api/Api";
 
 const { Title, Paragraph } = Typography;
 const { Option } = Select;
-const { Sider, Content } = Layout;
+const { Sider } = Layout;  // Removed Content import as it's unused
 
 function GuildsNavbar() {
-  const [guilds, setGuilds] = useState([]);
+  const [validGuilds, setValidGuilds] = useState([]); // No need for guilds state since we only use validGuilds
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [validGuilds, setValidGuilds] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchGuilds = async () => {
       try {
-        // Step 1: Fetch user guilds
+        // Fetch user guilds
         const response = await guildApi.getUserGuilds();
-        setGuilds(response.data);
 
-        // Step 2: Filter guilds that have bots and check if they exist
+        // Filter guilds that have bots and check if they exist
         const validGuildsWithBots = await checkValidGuilds(response.data);
         setValidGuilds(validGuildsWithBots);
       } catch (err) {
@@ -38,9 +36,9 @@ function GuildsNavbar() {
   // Function to check if guild exists by making API call to getGuildById
   const checkValidGuilds = async (guilds) => {
     const guildPromises = guilds.map(async (guild) => {
-      if (guild.botInGuild) {
+      if (guild.botInGuild) {  // Only check guilds with bots
         try {
-          // Step 3: Check if guild configuration exists (i.e., make the API call to getGuildById)
+          // Check if guild configuration exists (i.e., make the API call to getGuildById)
           const response = await guildApi.getGuildById(guild.guild.id);
           if (response.status === 200) {
             return guild; // Guild is valid and has bot
@@ -57,7 +55,7 @@ function GuildsNavbar() {
       return null; // Return null for invalid guilds
     });
 
-    // Step 4: Resolve all promises and filter out null values (invalid guilds)
+    // Resolve all promises and filter out null values (invalid guilds)
     const validGuilds = (await Promise.all(guildPromises)).filter(Boolean);
     return validGuilds;
   };
@@ -93,19 +91,6 @@ function GuildsNavbar() {
           )}
         </div>
       </Sider>
-      <Layout style={{ padding: "24px" }}>
-        <Content
-          style={{
-            padding: "24px",
-            background: "#fff",
-            minHeight: "100vh",
-            marginLeft: "300px",
-          }}
-        >
-          <h1>Guilds Content</h1>
-          <p>Additional content related to guilds would go here.</p>
-        </Content>
-      </Layout>
     </Layout>
   );
 }

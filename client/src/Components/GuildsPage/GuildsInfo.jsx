@@ -22,6 +22,7 @@ const GuildsInfo = () => {
         ]);
         setGuilds(guildsResponse.data);
         setGuildInfo(guildInfoResponse.data);
+        console.log(guildInfoResponse.data);  // Verify the structure
       } catch (err) {
         setError("Failed to fetch data. Please try again later.");
         console.error(err);
@@ -41,7 +42,11 @@ const GuildsInfo = () => {
   if (!guild || !guildInfo) return <Paragraph>No information found for this guild.</Paragraph>;
 
   const { name, icon, banner } = guild.guild;
-  const { prefix, deletemessageoncommand, dmgreetmessagetext, boostmessage, dateadded } = guildInfo;
+  const {
+    Prefix,  // Adjusted from 'prefix' to 'Prefix' as per the API response
+    DeleteMessageOnCommand,
+    DateAdded,  // Adjusted from 'dateadded' to 'DateAdded' as per the API response
+  } = guildInfo;
 
   return (
     <div style={{ padding: "24px", minHeight: "100vh" }}>
@@ -78,25 +83,30 @@ const GuildsInfo = () => {
                   height: "auto",
                   borderRadius: "50%",
                   marginBottom: "16px",
-                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)"
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
                 }}
               />
             </Col>
           )}
-
-          {/* Guild Details */}
           <Col span={16}>
             <Title level={3}>Guild Information</Title>
-            <Paragraph><strong>Prefix:</strong> {prefix}</Paragraph>
-            <Paragraph><strong>Delete message on command:</strong> {deletemessageoncommand ? "Yes" : "No"}</Paragraph>
-            <Paragraph><strong>Greeting message:</strong> {dmgreetmessagetext}</Paragraph>
-            <Paragraph><strong>Boost message:</strong> {boostmessage}</Paragraph>
-            <Paragraph><strong>Date Added:</strong> {new Date(dateadded).toLocaleString()}</Paragraph>
+            <Paragraph>
+              <strong>Guild ID:</strong> {guild.guild.id}
+            </Paragraph>
+            <Paragraph>
+              <strong>Prefix:</strong> {Prefix ? Prefix : "No prefix set"}
+            </Paragraph>
+            <Paragraph>
+              <strong>Delete message on command:</strong>{" "}
+              {DeleteMessageOnCommand === 1 ? "Yes" : "No"}
+            </Paragraph>
+            <Paragraph>
+              <strong>Date Added:</strong> {new Date(DateAdded).toLocaleString()}
+            </Paragraph>
           </Col>
         </Row>
       </Card>
 
-      {/* Guilds Navbar */}
       <div style={{ marginTop: "24px" }}>
         <GuildsNavbar />
       </div>

@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Card, Avatar, Typography } from "antd";
+import { Card, Avatar, Typography, Spin } from "antd";
+import api from "../../Api/Api";  // Import api from Api.js
 import "tailwindcss/tailwind.css";
 
 const { Title, Text } = Typography;
@@ -11,10 +12,41 @@ function formatCurrency(amount) {
 
 function UserInfo() {
   const { user } = useSelector((state) => state.user);
+  const [userInfo, setUserInfo] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Chỉ gọi backend nếu user.id tồn tại
+    if (user && user.id) {
+      const fetchUserInfo = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+          const response = await api.getUserInfoById(user.id); // Call the method from api
+          setUserInfo(response.data); // Assuming response contains .data
+        } catch (err) {
+          setError("Failed to fetch user information");
+        } finally {
+          setLoading(false);
+        }
+      };
+      
+      fetchUserInfo();
+    }
+  }, [user]);
 
   if (!user) return <span>Not logged in.</span>;
 
-  const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatarid}.png`;
+  if (loading) {
+    return <div className="flex justify-center items-center h-screen p-4"><Spin size="large" /></div>;
+  }
+
+  if (error) {
+    return <div className="flex justify-center items-center h-screen p-4 text-red-500">{error}</div>;
+  }
+
+  const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
 
   return (
     <div className="flex justify-center items-center h-screen p-4">
@@ -27,15 +59,21 @@ function UserInfo() {
         </div>
 
         <div className="mt-6 space-y-2">
-          <Text strong className="block">
-            Total XP: <Text>{user.totalXP}</Text>
-          </Text>
-          <Text strong className="block">
-            Currency: <Text>{formatCurrency(user.currencyAmount)}</Text>
-          </Text>
-          <Text strong className="block">
-            Bank: <Text>{formatCurrency(user.bankBalance)}</Text>
-          </Text>
+          {userInfo ? (
+            <>
+              <Text strong className="block">
+                Total XP: <Text>{userInfo.TotalXp}</Text>
+              </Text>
+              <Text strong className="block">
+                Currency: <Text>{formatCurrency(userInfo.CurrencyAmount)}</Text>
+              </Text>
+              <Text strong className="block">
+                Bank: <Text>{formatCurrency(userInfo.BankBalance || 0)}</Text>
+              </Text>
+            </>
+          ) : (
+            <Text>Loading user information...</Text>
+          )}
         </div>
       </Card>
     </div>
