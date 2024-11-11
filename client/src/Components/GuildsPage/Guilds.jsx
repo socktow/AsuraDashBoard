@@ -5,9 +5,6 @@ const Guilds = () => {
   return (
     <div>
       <GuildsNavbar />
-      <div>
-        <h1>Guilds Content</h1>
-      </div>
     </div>
   );
 }

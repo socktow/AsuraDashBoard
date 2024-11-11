@@ -1,19 +1,12 @@
 const express = require("express");
 const axios = require("axios");
-const sqlite3 = require("sqlite3").verbose();  // Cài đặt sqlite3
 const router = express.Router();
-const config = require("../../config.json"); // Đọc config.json
+const { Pool } = require("pg");
+const config = require('../../config.json'); // Load config.json
 
-// Lấy đường dẫn cơ sở dữ liệu từ config.json
-const dbPath = config.sqliteConfig.sqliteConnectionString;
-
-// Tạo kết nối với SQLite database
-const db = new sqlite3.Database(dbPath, (err) => {
-  if (err) {
-    console.error("Error opening database:", err);
-  } else {
-    console.log(`Connected to SQLite database at ${dbPath}`);
-  }
+// Initialize PostgreSQL connection
+const pool = new Pool({
+  connectionString: config.databaseConfig.psqlConnectionString,
 });
 
 let users = {};
@@ -50,12 +43,9 @@ module.exports = (client) => {
       );
       const { access_token } = tokenResponse.data;
 
-      const userResponse = await axios.get(
-        "https://discord.com/api/users/@me",
-        {
-          headers: { Authorization: `Bearer ${access_token}` },
-        }
-      );
+      const userResponse = await axios.get("https://discord.com/api/users/@me", {
+        headers: { Authorization: `Bearer ${access_token}` },
+      });
 
       const { id, username, avatar } = userResponse.data;
       users[id] = { id, username, avatar };
@@ -98,22 +88,49 @@ module.exports = (client) => {
     }
   });
 
-  router.get("/user/me", (req, res) => {
-    const userId = Object.keys(users)[0];
-    if (!userId) {
-      return res.status(401).send("Not logged in");
+  // Fetch current user info
+router.get("/user/me", async (req, res) => {
+  const userId = Object.keys(users)[0];
+  if (!userId) {
+    return res.status(401).send("Not logged in");
+  }
+
+  try {
+    const result = await pool.query(
+      `
+      SELECT userid, username, avatarid, totalxp, currencyamount
+      FROM discorduser
+      WHERE userid = $1
+      `,
+      [userId]
+    );
+    const bankresult = await pool.query(
+      `
+      SELECT balance
+      FROM bankusers
+      WHERE userid = $1
+      `,
+      [userId]
+    );
+    const user = result.rows[0];
+    const bankuser = bankresult.rows[0];
+    if (user) {
+      res.json({
+        id: user.userid,
+        username: user.username,
+        avatarid: user.avatarid,
+        totalXP: user.totalxp,
+        currencyAmount: user.currencyamount,
+        bankBalance: bankuser ? bankuser.balance : 0,
+      });
+    } else {
+      res.status(404).send("User info not found");
     }
-    const user = users[userId];
-    if (!user) {
-      return res.status(404).send("User info not found");
-    }
-    res.json({
-      id: user.id,
-      username: user.username,
-      avatar: user.avatar
-    });
-    console.log("User info:", user);
-  });
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    res.status(500).send("Error fetching user info");
+  }
+});
 
   // Guilds route
   router.get("/guilds", async (req, res) => {
