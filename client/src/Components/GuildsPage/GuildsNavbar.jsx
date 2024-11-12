@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Spin, Typography, Select, Layout } from "antd";
-import { useNavigate } from "react-router-dom";
 import guildApi from "../../Api/Api";
+import GuildsBanner from "./GuildsBanner";
+import GuildsInfo from "./GuildsInfo";
 
 const { Title, Paragraph } = Typography;
 const { Option } = Select;
@@ -12,16 +13,13 @@ function GuildsNavbar() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [validGuilds, setValidGuilds] = useState([]);
-  const navigate = useNavigate();
+  const [selectedGuildId, setSelectedGuildId] = useState(null);
 
   useEffect(() => {
     const fetchGuilds = async () => {
       try {
-        // Step 1: Fetch user guilds
         const response = await guildApi.getUserGuilds();
         setGuilds(response.data);
-
-        // Step 2: Filter guilds that have bots and check if they exist
         const validGuildsWithBots = await checkValidGuilds(response.data);
         setValidGuilds(validGuildsWithBots);
       } catch (err) {
@@ -35,35 +33,30 @@ function GuildsNavbar() {
     fetchGuilds();
   }, []);
 
-  // Function to check if guild exists by making API call to getGuildById
   const checkValidGuilds = async (guilds) => {
     const guildPromises = guilds.map(async (guild) => {
       if (guild.botInGuild) {
         try {
-          // Step 3: Check if guild configuration exists (i.e., make the API call to getGuildById)
           const response = await guildApi.getGuildById(guild.guild.id);
           if (response.status === 200) {
-            return guild; // Guild is valid and has bot
+            return guild;
           }
         } catch (err) {
           if (err.response && err.response.status === 404) {
-            // Guild does not exist, return null to filter out this guild
             console.log(`Guild with ID ${guild.guild.id} not found.`);
           } else {
             console.error("Error checking guild:", err);
           }
         }
       }
-      return null; // Return null for invalid guilds
+      return null;
     });
 
-    // Step 4: Resolve all promises and filter out null values (invalid guilds)
-    const validGuilds = (await Promise.all(guildPromises)).filter(Boolean);
-    return validGuilds;
+    return (await Promise.all(guildPromises)).filter(Boolean);
   };
 
   const handleSelectGuild = (guildId) => {
-    navigate(`/guilds/${guildId}`);
+    setSelectedGuildId(guildId);
   };
 
   if (loading) return <Spin tip="Loading guilds..." size="large" />;
@@ -93,17 +86,11 @@ function GuildsNavbar() {
           )}
         </div>
       </Sider>
-      <Layout style={{ padding: "24px" }}>
-        <Content
-          style={{
-            padding: "24px",
-            background: "#fff",
-            minHeight: "100vh",
-            marginLeft: "300px",
-          }}
-        >
+      <Layout style={{ marginLeft: "10px" }}>
+        <Content style={{ padding: "30px", background: "#fff" }}>
           <div>
-            <Title level={3}>Guilds Page</Title>
+            <GuildsBanner />
+            {selectedGuildId && <GuildsInfo guildId={selectedGuildId} />}
           </div>
         </Content>
       </Layout>

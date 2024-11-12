@@ -2,7 +2,7 @@ const express = require("express");
 const axios = require("axios");
 const router = express.Router();
 const { Pool } = require("pg");
-const config = require('../../config.json'); // Load config.json
+const config = require('../../config.json');
 
 // Initialize PostgreSQL connection
 const pool = new Pool({

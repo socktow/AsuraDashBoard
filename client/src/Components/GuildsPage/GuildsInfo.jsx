@@ -1,60 +1,51 @@
 import React, { useEffect, useState } from "react";
 import { Spin, Typography, Card, Row, Col, Image } from "antd";
-import { useParams } from "react-router-dom";
 import guildApi from "../../Api/Api";
 
 const { Title, Paragraph } = Typography;
 
-const GuildsInfo = () => {
-  const { guildId } = useParams();
+const GuildsInfo = ({ guildId }) => {
   const [guildInfo, setGuildInfo] = useState(null);
-  const [guilds, setGuilds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    document.title = `Guilds Info : ${guildId}`;
+
+    const fetchGuildInfo = async () => {
       try {
-        const [guildsResponse, guildInfoResponse] = await Promise.all([
-          guildApi.getUserGuilds(),
-          guildApi.getGuildById(guildId),
-        ]);
-        setGuilds(guildsResponse.data);
-        setGuildInfo(guildInfoResponse.data);
+        const response = await guildApi.getGuildById(guildId);
+        setGuildInfo(response.data);
       } catch (err) {
-        setError("Failed to fetch data. Please try again later.");
+        setError("Failed to fetch guild info. Please try again later.");
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
+    fetchGuildInfo();
   }, [guildId]);
 
   if (loading) return <Spin tip="Loading guild info..." size="large" />;
   if (error) return <Paragraph style={{ color: "red" }}>{error}</Paragraph>;
+  if (!guildInfo) return <Paragraph>No information found for this guild.</Paragraph>;
 
-  const guild = guilds.find((g) => g.guild.id === guildId);
-
-  if (!guild || !guildInfo) return <Paragraph>No information found for this guild.</Paragraph>;
-
-  const { name, icon, banner } = guild.guild;
-  const { prefix, deletemessageoncommand, dmgreetmessagetext, boostmessage, dateadded } = guildInfo;
+  const { prefix, deletemessageoncommand, dmgreetmessagetext, filterinvites, boostmessage, dateadded } = guildInfo;
 
   return (
-    <div style={{ padding: "24px", minHeight: "100vh" }}>
+    <div >
       <Card
-        title={`Guild: ${name}`}
+        title={`Guild: ${guildInfo.name}`}
         bordered={false}
         style={{ width: "100%", maxWidth: 900, margin: "0 auto" }}
       >
         {/* Banner */}
-        {banner && (
+        {guildInfo.banner && (
           <Row gutter={16}>
             <Col span={24}>
               <Image
-                src={`https://cdn.discordapp.com/banners/${guildId}/${banner}.png`}
+                src={`https://cdn.discordapp.com/banners/${guildId}/${guildInfo.banner}.png`}
                 alt="Guild Banner"
                 preview={false}
                 style={{ width: "100%", height: "auto", borderRadius: "8px", marginBottom: "16px" }}
@@ -66,10 +57,10 @@ const GuildsInfo = () => {
         {/* Guild Icon and Information */}
         <Row gutter={16}>
           {/* Guild Icon */}
-          {icon && (
+          {guildInfo.icon && (
             <Col span={8}>
               <Image
-                src={`https://cdn.discordapp.com/icons/${guildId}/${icon}.png`}
+                src={`https://cdn.discordapp.com/icons/${guildId}/${guildInfo.icon}.png`}
                 alt="Guild Icon"
                 preview={false}
                 style={{
@@ -88,6 +79,7 @@ const GuildsInfo = () => {
             <Paragraph><strong>Delete message on command:</strong> {deletemessageoncommand ? "Yes" : "No"}</Paragraph>
             <Paragraph><strong>Greeting message:</strong> {dmgreetmessagetext}</Paragraph>
             <Paragraph><strong>Boost message:</strong> {boostmessage}</Paragraph>
+            <Paragraph><strong>Filter invites:</strong> {filterinvites}</Paragraph>
             <Paragraph><strong>Date Added:</strong> {new Date(dateadded).toLocaleString()}</Paragraph>
           </Col>
         </Row>
