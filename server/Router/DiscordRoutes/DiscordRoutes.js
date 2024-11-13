@@ -1,14 +1,7 @@
 const express = require("express");
 const axios = require("axios");
 const router = express.Router();
-const { Pool } = require("pg");
 const config = require('../../config.json');
-
-// Initialize PostgreSQL connection
-const pool = new Pool({
-  connectionString: config.databaseConfig.psqlConnectionString,
-});
-
 let users = {};
 let managedGuilds = [];
 
@@ -88,51 +81,29 @@ module.exports = (client) => {
     }
   });
 
-  // Fetch current user info
-router.get("/user/me", async (req, res) => {
-  const userId = Object.keys(users)[0];
-  if (!userId) {
-    return res.status(401).send("Not logged in");
-  }
-
-  try {
-    const result = await pool.query(
-      `
-      SELECT userid, username, avatarid, totalxp, currencyamount
-      FROM discorduser
-      WHERE userid = $1
-      `,
-      [userId]
-    );
-    const bankresult = await pool.query(
-      `
-      SELECT balance
-      FROM bankusers
-      WHERE userid = $1
-      `,
-      [userId]
-    );
-    const user = result.rows[0];
-    const bankuser = bankresult.rows[0];
-    if (user) {
-      res.json({
-        id: user.userid,
-        username: user.username,
-        avatarid: user.avatarid,
-        totalXP: user.totalxp,
-        currencyAmount: user.currencyamount,
-        bankBalance: bankuser ? bankuser.balance : 0,
-      });
-    } else {
-      res.status(404).send("User info not found");
+  router.get("/user/me", async (req, res) => {
+    const userId = Object.keys(users)[0];
+    if (!userId) {
+      return res.status(401).send("Not logged in");
     }
-  } catch (error) {
-    console.error("Error fetching user data:", error);
-    res.status(500).send("Error fetching user info");
-  }
-});
+  
+    try {
+      const user = users[userId]; 
+      if (user) {
+        res.json({
+          id: user.id,
+          username: user.username,
+          avatarid: user.avatar,
+        });
+      } else {
+        res.status(404).send("User info not found");
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      res.status(500).send("Error fetching user info");
+    }
+  });
 
-  // Guilds route
   router.get("/guilds", async (req, res) => {
     try {
       if (!client.isReady()) {

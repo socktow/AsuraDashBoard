@@ -1,45 +1,63 @@
-// src/components/Login.js
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-import UserInfo from "../Components/UserInfoPage/UserInfo"; // Điều chỉnh lại đường dẫn nếu cần
-import { fetchUserInfo } from "../Redux/UserSlice"; // Đảm bảo đường dẫn đến file slice là đúng
+import { useNavigate } from "react-router-dom";
+import UserInfo from "../Components/UserInfoPage/UserInfo";
+import { fetchUserInfo } from "../Redux/UserSlice";
+import { FaDiscord } from "react-icons/fa";
 
 function Login() {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // Khởi tạo useNavigate
+  const navigate = useNavigate();
   const { user, status } = useSelector((state) => state.user);
 
   useEffect(() => {
-    // Nếu đã có user, gọi action để lấy thông tin người dùng
-    if (user) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+    if (token) {
+      localStorage.setItem("discord_token", token);
+      urlParams.delete("token");
+      window.history.replaceState(null, null, window.location.pathname);
       dispatch(fetchUserInfo());
-      navigate("/user"); // Chuyển hướng đến trang /user nếu đã đăng nhập
+      navigate("/user");
     }
-  }, [dispatch, user, navigate]); // Thêm navigate vào dependencies
+  }, [dispatch, navigate]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("discord_token");
+    if (token && !user) {
+      dispatch(fetchUserInfo());
+      navigate("/user");
+    }
+  }, [dispatch, navigate, user]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen ">
-      {status === "loading" && (
-        <span className="text-gray-500 animate-pulse">Loading...</span>
-      )}
-      {status === "failed" && (
-        <span className="text-red-500 animate-bounce">Error fetching user data.</span>
-      )}
-      {user ? (
-        <UserInfo user={user} />
-      ) : (
-        <span className="text-gray-700">Not logged in.</span>
-      )}
-      {!user && (
-        <a
-          className="flex items-center py-2 px-4 rounded-lg bg-[#5865F2] hover:bg-[#5865F2]/80 text-white transition-colors duration-300 mt-4 transform hover:scale-105 hover:shadow-lg"
-          href="http://localhost:4000/auth/discord/login"
-        >
-          <div className="h-7 w-7 fill-white hover:fill-white/80 mr-4" />
-          <span className="text-sm">Sign in with Discord</span>
-        </a>
-      )}
+    <div
+      className="flex flex-col items-center justify-center min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: "url('https://source.unsplash.com/random/1920x1080')" }}
+    >
+      <div className="bg-black bg-opacity-50 p-6 rounded-lg text-center">
+        {status === "loading" && (
+          <span className="text-gray-300 animate-pulse">Loading...</span>
+        )}
+        {status === "failed" && (
+          <span className="text-red-500 animate-bounce">Error fetching user data.</span>
+        )}
+        {user ? (
+          <UserInfo user={user} />
+        ) : (
+          <span className="text-white text-lg">Not logged in.</span>
+        )}
+
+        {!user && (
+          <a
+            className="flex items-center py-3 px-6 mt-6 rounded-lg bg-[#5865F2] hover:bg-[#5865F2]/80 text-white font-semibold text-lg transition-transform transform hover:scale-105 shadow-lg"
+            href="http://localhost:4000/auth/discord/login"
+          >
+            <FaDiscord className="mr-3 text-2xl" />
+            <span>Sign in with Discord</span>
+          </a>
+        )}
+      </div>
     </div>
   );
 }
