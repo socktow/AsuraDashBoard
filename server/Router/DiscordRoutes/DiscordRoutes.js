@@ -6,6 +6,7 @@ let users = {};
 let managedGuilds = [];
 
 module.exports = (client) => {
+
   router.get("/auth/discord/login", (req, res) => {
     const url = `https://discord.com/oauth2/authorize?client_id=${
       config.botConfig.clientId
@@ -35,14 +36,12 @@ module.exports = (client) => {
         params
       );
       const { access_token } = tokenResponse.data;
-
       const userResponse = await axios.get("https://discord.com/api/users/@me", {
         headers: { Authorization: `Bearer ${access_token}` },
       });
 
-      const { id, username, avatar } = userResponse.data;
-      users[id] = { id, username, avatar };
-
+      const { id, username, avatar, banner} = userResponse.data;
+      users[id] = { id, username, avatar, banner};
       const guildsResponse = await axios.get(
         "https://discord.com/api/users/@me/guilds",
         {
@@ -94,6 +93,7 @@ module.exports = (client) => {
           id: user.id,
           username: user.username,
           avatarid: user.avatar,
+          bannerid: user.banner
         });
       } else {
         res.status(404).send("User info not found");
