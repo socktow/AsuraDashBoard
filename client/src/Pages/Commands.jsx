@@ -3,7 +3,15 @@ import data from './commandlist.json';
 
 const Commands = () => {
   const [selectedModule, setSelectedModule] = useState('Administration');
+  const [searchTerm, setSearchTerm] = useState('');
   const moduleData = data[selectedModule] || [];
+
+  const filteredCommands = moduleData.filter(
+    (command) =>
+      command.Aliases.some((alias) => alias.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      command.Description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      command.Usage.some((usage) => usage.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
 
   return (
     <div className="flex min-h-screen bg-gray-900 text-gray-100">
@@ -23,10 +31,21 @@ const Commands = () => {
           ))}
         </ul>
       </aside>
+
       <main className="flex-1 p-6">
         <h2 className="text-3xl font-bold mb-4 text-green-400">
           {selectedModule} Commands
         </h2>
+        
+        {/* Search Input */}
+        <input
+          type="text"
+          placeholder="Search commands..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full p-2 mb-4 bg-gray-700 text-gray-200 rounded-lg"
+        />
+
         <table className="w-full bg-gray-800 text-gray-200 shadow-md rounded-lg overflow-hidden">
           <thead className="bg-gray-700 text-green-400">
             <tr>
@@ -37,13 +56,8 @@ const Commands = () => {
             </tr>
           </thead>
           <tbody>
-            {moduleData
-              .filter(
-                (command) =>
-                  !command.Requirements.includes('Bot Owner Only') &&
-                  !command.Requirements.includes('No Public Bot')
-              )
-              .map((command, index) => {
+            {filteredCommands.length > 0 ? (
+              filteredCommands.map((command, index) => {
                 const cleanedAliases = command.Aliases.map((alias) =>
                   alias.replace(/^\./, '')
                 );
@@ -67,7 +81,14 @@ const Commands = () => {
                     </td>
                   </tr>
                 );
-              })}
+              })
+            ) : (
+              <tr>
+                <td colSpan="4" className="p-3 text-center text-gray-400">
+                  No commands found.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </main>

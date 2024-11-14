@@ -1,45 +1,81 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { Card, Avatar, Typography } from "antd";
+import React, { useEffect, useState } from "react";
+import { Card, Avatar, Typography, Spin, Alert } from "antd";
+import api from "../../Api/Api";
 import "tailwindcss/tailwind.css";
 
 const { Title, Text } = Typography;
 
-function formatCurrency(amount) {
-  return parseInt(amount).toLocaleString("en-US");
-}
+const formatCurrency = (amount) => parseInt(amount).toLocaleString("en-US");
 
-function UserInfo() {
-  const { user } = useSelector((state) => state.user);
+const UserInfo = () => {
+  const [user, setUser] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  if (!user) return <span>Not logged in.</span>;
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userInfoResponse = await api.getUserInfo();
+        const basicInfo = userInfoResponse.data;
+        setUserInfo(basicInfo);
+        if (basicInfo && basicInfo.id) {
+          const userDetailsResponse = await api.getUserInfoById(basicInfo.id);
+          const userDetails = userDetailsResponse.data[0];
+          setUser({
+            ...userDetails,
+            username: basicInfo.username,
+            avatarid: basicInfo.avatarid,
+          });
+        } else {
+          throw new Error("User ID is undefined");
+        }
+      } catch (err) {
+        console.error("Failed to fetch user data:", err);
+        setError("Không thể tải dữ liệu người dùng.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatarid}.png`;
+    fetchUserData();
+  }, []);
+
+  if (loading) return <Spin tip="Đang tải..." />;
+  if (error) return <Alert message={error} type="error" showIcon />;
+
+  const avatarUrl = `https://cdn.discordapp.com/avatars/${userInfo.id}/${userInfo.avatarid}.png`;
+  const bannerUrl = `https://cdn.discordapp.com/banners/${userInfo.id}/${userInfo.bannerid}.png?size=512`;
+  const userFields = [
+    { display: "Tổng XP", key: "totalxp" },
+    { display: "Số dư", key: "currencyamount" },
+    { display: "Ngân hàng", key: "balance" },
+  ];
 
   return (
-    <div className="flex justify-center items-center h-screen p-4">
-      <Card className="w-full max-w-md shadow-lg rounded-lg border border-gray-200">
-        <div className="flex flex-col items-center">
-          <Avatar src={avatarUrl} size={80} className="mb-4" />
-          <Title level={3} className="text-center">
-            Hello, {user.username}!
+    <div className="w-full h-screen p-4 bg-gray-100 flex flex-col items-center">
+      <Card className="w-full max-w-4xl shadow-lg rounded-lg border border-gray-300 flex-grow">
+        <div className="flex flex-col items-center p-4">
+          <div className="flex flex-col items-center space-y-4 mb-6 w-full">
+            <Avatar src={avatarUrl} size={100} className="border-4 border-white" />
+            <img src={bannerUrl} alt="User Banner" className="w-full h-32 rounded-lg object-cover" />
+          </div>
+          <Title level={3} className="text-center text-gray-800 font-semibold w-full">
+            Xin chào, {user.username}!
           </Title>
-        </div>
-
-        <div className="mt-6 space-y-2">
-          <Text strong className="block">
-            Total XP: <Text>{user.totalXP}</Text>
-          </Text>
-          <Text strong className="block">
-            Currency: <Text>{formatCurrency(user.currencyAmount)}</Text>
-          </Text>
-          <Text strong className="block">
-            Bank: <Text>{formatCurrency(user.bankBalance)}</Text>
-          </Text>
+          <div className="mt-6 space-y-4 w-full">
+            {userFields.map(({ display, key }, index) => (
+              <div key={index} className="border-b pb-2">
+                <Text strong className="block text-gray-700 text-lg">
+                  {display}: <Text className="text-gray-900 font-semibold">{formatCurrency(user[key])}</Text>
+                </Text>
+              </div>
+            ))}
+          </div>
         </div>
       </Card>
     </div>
   );
-}
+};
 
 export default UserInfo;

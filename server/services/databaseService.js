@@ -8,8 +8,8 @@ const pool = new Pool({
 async function fetchFromDatabase(query, params, res, notFoundMessage) {
   try {
     const result = await pool.query(query, params);
-    if (result.rows.length) {
-      res.json(params ? result.rows[0] : result.rows);
+    if (result.rows.length > 0 ) {
+      res.json(result.rows);
     } else {
       res.status(404).send(notFoundMessage);
     }

@@ -8,7 +8,6 @@ import AdminLayout from "./Layout/AdminLayout";
 import Login from "./Pages/Login";
 import Shop from "./Pages/Shop";
 import Payment from "./Components/Payment/Payment";
-import UserInfo from "./Components/UserInfoPage/UserInfo";
 import Guilds from "./Components/GuildsPage/Guilds";
 import PaymentSuccess from "./Components/PaymentResults/PaymentSuccess";
 import Commands from "./Pages/Commands";
@@ -22,6 +21,8 @@ import NewEmbedBuilder from "./Pages/Misc/NewEmbedBuilder";
 import Placeholder from "./Pages/Misc/Placeholder";
 import GuildsInfo from "./Components/GuildsPage/GuildsInfo";
 import Trochoiduquay from "./Components/Trochoiduquay/Trochoiduquay";
+import User from "./Components/UserInfoPage/User";
+import Notfround from "./Pages/Notfround";
 function App() {
   return (
     <Provider store={store}>
@@ -29,7 +30,7 @@ function App() {
         <Routes>
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Shop />} />
-            <Route path="user" element={<UserInfo />} />
+            <Route path="user" element={<User />} />
             <Route path="guilds" element={<Guilds />} />
             <Route path="guilds/:guildId" element={<GuildsInfo />} />
             <Route path="Login" element={<Login />} />
@@ -46,6 +47,8 @@ function App() {
             <Route path="Misc/Term" element={<Term/>} />
             <Route path="Misc/New-Embed-Builder" element={<NewEmbedBuilder/>} />
             <Route path="Misc/Placeholder" element={<Placeholder />} />
+            <Route path="*" element={<Notfround />} />
+
           </Route>
           <Route path="/admin" element={<AdminLayout />} />
         </Routes>

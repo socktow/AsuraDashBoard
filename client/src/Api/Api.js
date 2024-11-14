@@ -14,10 +14,13 @@ const apiCall = async (endpoint, data) => {
 };
 
 const api = {
+  // GET METHOD
   getUserInfoById: (userId) => axios.get(`${BASE_URL}/api/users/${userId}`), 
   getUserInfo: () => axios.get(`${BASE_URL}/user/me`),
   getUserGuilds: () => axios.get(`${BASE_URL}/guilds`),
   getGuildById: (guildId) => axios.get(`${BASE_URL}/api/guilds/${guildId}`),
+  // PATCH METHOD
+  PatchUserBalance: (userId) => axios.get(`${BASE_URL}/api/users/${userId}/config`), 
   // Payment Method
   createMomoPayment: (amount, orderInfo) => apiCall("momo/payment", { amount, orderInfo }),
   checkMomoPayment: (orderId) => apiCall("momo/checkmomopayment", { orderId }),

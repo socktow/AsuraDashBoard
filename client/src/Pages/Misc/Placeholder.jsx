@@ -120,10 +120,10 @@ const Placeholder = () => {
   ];
 
   return (
-    <div style={{ padding: "40px" , borderRadius: "10px" , boxShadow: "0 4px 8px rgba(0, 0, 0, 1)"}}>
+    <div style={{ padding: "40px", borderRadius: "10px", backgroundColor: "#2f2f2f", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
       {placeholders.map((section, index) => (
         <div key={index} style={{ marginBottom: "24px" }}>
-          <Title level={4} style={{ fontWeight: "bold", color: "white" }}>
+          <Title level={4} style={{ fontWeight: "bold", color: "rgb(25, 245, 170)" }}>
             {section.title}
           </Title>
           {section.content.map((text, idx) => {
@@ -135,13 +135,15 @@ const Placeholder = () => {
                   display: "flex",
                   alignItems: "center",
                   color: "white",
+                  fontSize: "16px",
+                  marginBottom: "8px",
                 }}
               >
                 <Button
                   type="primary"
                   icon={<CopyOutlined />}
                   size="small"
-                  style={{ marginRight: "10px" }}
+                  style={{ marginRight: "10px", backgroundColor: "#1890ff", borderColor: "#1890ff" }}
                   onClick={() => copyToClipboard(placeholderText)}
                 ></Button>
                 {text}

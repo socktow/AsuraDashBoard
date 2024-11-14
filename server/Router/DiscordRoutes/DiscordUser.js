@@ -14,92 +14,62 @@ router.get("/users", (req, res) => {
 router.route("/users/:id").get((req, res) => {
   const { id } = req.params;
   const query = `
-    SELECT d.*, b.balance
-    FROM public.discorduser d
-    LEFT JOIN public.bankusers b ON d.userid = b.userid
-    WHERE d.userid = $1;
+  SELECT d.*, b.balance
+  FROM public.discorduser d
+  LEFT JOIN public.bankusers b ON d.userid = b.userid
+  WHERE d.userid = $1;
   `;
   fetchFromDatabase(query, [id], res, "No user found with this ID");
 });
 
-router.route("/users/:id").patch(async (req, res) => {
-  const { totalxp, currencyamount, balance } = req.body;
-  const userid = req.params.id;
-
-  const updateFields = {
-    totalxp: totalxp || null,
-    currencyamount: currencyamount || null,
-    balance: balance || null,
-  };
-
-  try {
-    const updateUserQuery = `
-      UPDATE public.discorduser
-      SET totalxp = COALESCE($1, totalxp), currencyamount = COALESCE($2, currencyamount)
-      WHERE userid = $3
-      RETURNING *;
-    `;
-    const userParams = [updateFields.totalxp, updateFields.currencyamount, userid];
-    const userResult = await updateDatabase(updateUserQuery, userParams);
-
-    if (!userResult || userResult.length === 0) {
-      return res.status(404).json({ message: "User not found or update failed" });
-    }
-    if (updateFields.balance !== null) {
-      const updateBalanceQuery = `
-        UPDATE public.bankusers
-        SET balance = $1
-        WHERE userid = $2
-        RETURNING *;
-      `;
-      const balanceResult = await updateDatabase(updateBalanceQuery, [updateFields.balance, userid]);
-
-      if (!balanceResult || balanceResult.length === 0) {
-        return res.status(404).json({ message: "Bank account not found or update failed" });
-      }
-      return res.json({
-        message: "User and bank account updated successfully",
-        user: userResult,
-        balance: balanceResult,
-      });
-    }
-    return res.json({
-      message: "User updated successfully",
-      user: userResult,
-    });
-  } catch (error) {
-    console.error("An error occurred during update:", error);
-    return res.status(500).json({ message: "An error occurred during update", error: error.message });
-  }
+router.get("/lsgd/:id", (req, res) => {
+  fetchFromDatabase(
+    "SELECT * FROM currencytransactions WHERE userid = $1 ORDER BY id ASC",
+    [req.params.id],
+    res,
+    "User not found"
+  );
 });
 
-router.route("/users/:id/balance").patch(async (req, res) => {
+router.patch("/users/:id/payment", (req, res) => {
+  // something
+  const { amount } = req.body;
+  const { userId } = req.params;
+
+  if (typeof amount !== 'number') {
+    return res.status(400).json({ message: "Invalid amount value" });
+  }
+})
+
+router.route("/users/:id/config").patch(async (req, res) => {
   const { balance } = req.body;
-  const userid = req.params.id;
+  const userId = req.params.id;
+
+  if (typeof balance !== 'number') {
+    return res.status(400).json({ message: "Invalid balance value" });
+  }
 
   try {
-    const updateBalanceQuery = `
+    const query = `
       UPDATE public.bankusers
       SET balance = balance + $1
       WHERE userid = $2
-      RETURNING *;
+      RETURNING balance;
     `;
-    const balanceResult = await updateDatabase(updateBalanceQuery, [balance, userid]);
+    const [result] = await updateDatabase(query, [balance, userId]);
 
-    if (!balanceResult || balanceResult.length === 0) {
-      return res.status(404).json({ message: "Bank account not found or update failed" });
+    if (!result) {
+      return res.status(404).json({ message: "Bank account not found" });
     }
 
-    return res.json({
-      message: "Bank account balance updated successfully",
-      balance: balanceResult,
+    res.json({
+      message: `${balance > 0 ? "Deposit" : "Withdrawal"} successful`,
+      newBalance: result.balance,
     });
-
   } catch (error) {
-    console.error("An error occurred during balance update:", error);
-    return res.status(500).json({ message: "An error occurred during balance update", error: error.message });
+    console.error("Balance update error:", error);
+    res.status(500).json({ message: "Balance update failed", error: error.message });
   }
 });
-
 
 module.exports = router;
