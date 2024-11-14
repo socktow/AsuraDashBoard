@@ -47,14 +47,16 @@ const UserInfo = () => {
   const avatarUrl = `https://cdn.discordapp.com/avatars/${userInfo.id}/${userInfo.avatarid}.png`;
   const bannerUrl = `https://cdn.discordapp.com/banners/${userInfo.id}/${userInfo.bannerid}.png?size=512`;
   const userFields = [
-    { display: "Tổng XP", key: "totalxp" },
-    { display: "Số dư", key: "currencyamount" },
-    { display: "Ngân hàng", key: "balance" },
+    { display: "APP-ID ", key: "id" },
+    { display: "Tổng XP ", key: "totalxp" },
+    { display: "Số dư ", key: "currencyamount" },
+    { display: "Ngân hàng ", key: "balance" },
+    { display: "Clan ", key: "clubid" },
   ];
 
   return (
-    <div className="w-full h-screen p-4 bg-gray-100 flex flex-col items-center">
-      <Card className="w-full max-w-4xl shadow-lg rounded-lg border border-gray-300 flex-grow">
+    <div className="w-full h-screen p-4 flex flex-col items-center">
+      <Card className="w-full lex-grow">
         <div className="flex flex-col items-center p-4">
           <div className="flex flex-col items-center space-y-4 mb-6 w-full">
             <Avatar src={avatarUrl} size={100} className="border-4 border-white" />

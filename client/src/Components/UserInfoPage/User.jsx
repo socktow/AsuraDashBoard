@@ -1,22 +1,27 @@
-import React from 'react'
-import UserInfo from './UserInfo'
+import React from 'react';
+import UserInfo from './UserInfo';
+import UserBalance from './UserBalance';
+import UserTrans from './UserTrans';
+import UserPayment from './UserPayment';
 
 const User = () => {
   return (
-    <div className="w-full  bg-gray-100">
-      <div className="flex w-full h-full">
-        <div className="w-1/ bg-white border-r border-gray-300 p-4">
-          <UserInfo />
-        </div>
-        <div className="w-1/2 bg-white border-r border-gray-300 p-4">
-          Page 2
-        </div>
-        <div className="w-1/2 bg-white p-4">
-          Page 3
-        </div>
+    <div className="grid grid-rows-3 grid-flow-col gap-4 px-4 py-4 leading-10">
+      <div className="p-4 w-full bg-white rounded-xl row-span-3">
+        <UserInfo />
+      </div>
+      <div className="p-4 w-full bg-white rounded-xl col-span-2">
+        <UserBalance />
+      </div>
+      {/* Adjusted UserTrans components to have w-full */}
+      <div className="p-4 w-full bg-white rounded-xl row-span-2 col-span-1">
+        <UserTrans />
+      </div>
+      <div className="p-4 w-full bg-white rounded-xl row-span-2 col-span-1">
+        <UserPayment />
       </div>
     </div>
-  )
+  );
 }
 
 export default User;
