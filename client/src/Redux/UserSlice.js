@@ -1,28 +1,19 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import userApi from "../Api/Api";
 
-// Thunk for fetching user info by userId
-export const fetchUserInfoById = createAsyncThunk(
-  "user/fetchUserInfoById",
-  async (userId, { rejectWithValue }) => {
-    try {
-      const response = await userApi.getUserInfoById(userId);
-      console.log("Fetched user info by ID:", response.data);
-      return response.data;
-    } catch (error) {
-      console.error("Failed to fetch user info:", error);
-      return rejectWithValue(error.response.data || error.message);
-    }
-  }
-);
-
-// Thunk for fetching current user's info (me)
 export const fetchUserInfo = createAsyncThunk(
   "user/fetchUserInfo",
   async () => {
     const response = await userApi.getUserInfo();
-    console.log("Fetched current user's info:", response.data);
     return response.data; 
+  }
+);
+
+export const fetchUserInfoById = createAsyncThunk(
+  "user/fetchUserInfoById",
+  async (userId) => {
+    const response = await userApi.getUserInfoById(userId);
+    return response.data[0];
   }
 );
 
@@ -30,14 +21,14 @@ const userSlice = createSlice({
   name: "user",
   initialState: {
     user: null,
-    userId: null,
+    userById: null, 
     status: "idle",
     error: null,
   },
   reducers: {
     logoutUser: (state) => {
       state.user = null;
-      state.userId = null;
+      state.userById = null;
     },
   },
   extraReducers: (builder) => {
@@ -46,25 +37,19 @@ const userSlice = createSlice({
         state.status = "loading";
       })
       .addCase(fetchUserInfoById.fulfilled, (state, action) => {
-        console.log("Fetched user info successfully:", action.payload);
         state.status = "succeeded";
-        state.user = action.payload;
-        state.userId = action.payload.id;
+        state.userById = action.payload;  // Lưu thông tin userById
       })
       .addCase(fetchUserInfoById.rejected, (state, action) => {
-        console.log("Fetch failed:", action.payload);
         state.status = "failed";
         state.error = action.error.message;
-      });
-
-    builder
+      })
       .addCase(fetchUserInfo.pending, (state) => {
         state.status = "loading";
       })
       .addCase(fetchUserInfo.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.user = action.payload;
-        state.userId = action.payload.id;
+        state.user = action.payload;  // Lưu thông tin người dùng gốc
       })
       .addCase(fetchUserInfo.rejected, (state, action) => {
         state.status = "failed";
@@ -72,7 +57,6 @@ const userSlice = createSlice({
       });
   },
 });
-
 
 export const { logoutUser } = userSlice.actions;
 

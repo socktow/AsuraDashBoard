@@ -169,3 +169,4 @@ const UserTrans = () => {
 };
 
 export default UserTrans;
+

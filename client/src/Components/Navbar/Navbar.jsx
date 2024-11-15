@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Dropdown, Menu } from "antd";
 import {
   SmileOutlined,
@@ -10,27 +10,12 @@ import {
   LoginOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { fetchUserInfo, logoutUser, fetchUserInfoById } from "../../Redux/UserSlice";
+import {  logoutUser } from "../../Redux/UserSlice";
 import "./Navbar.scss";
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const { user, status } = useSelector((state) => state.user);
-
-  useEffect(() => {
-    if (!user && status === "idle") {
-      dispatch(fetchUserInfo());
-      const userId = user?.id;
-      if (userId) {
-        dispatch(fetchUserInfoById(userId));
-      }
-    }
-
-    // Log the current user data and status
-    console.log("User data:", user);
-    console.log("Status:", status);
-  }, [dispatch, user, status]);
-
+  const userInfo = useSelector((state) => state.user.user); 
   const userMenu = (
     <Menu>
       <Menu.Item key="userInfo">
@@ -54,6 +39,7 @@ const Navbar = () => {
     </Menu>
   );
 
+  // About menu for links like 'Partner', 'Contact', etc.
   const aboutMenu = (
     <Menu>
       <Menu.Item key="partner">
@@ -68,6 +54,7 @@ const Navbar = () => {
     </Menu>
   );
 
+  // Misc menu for links like 'Term', 'Privacy', etc.
   const miscMenu = (
     <Menu>
       <Menu.Item key="term">
@@ -90,7 +77,7 @@ const Navbar = () => {
       <div className="navbar-logo">
         <Link to="/" className="navbar-link">Asura BOT</Link>
       </div>
-      
+
       <nav className="navbar-links">
         <Link to="/commands" className="navbar-link">Command</Link>
         <Link to="/patch-note" className="navbar-link">Patch Note</Link>
@@ -103,10 +90,11 @@ const Navbar = () => {
       </nav>
 
       <div className="navbar-user">
-        {user ? (
+        {/* If the user is logged in, show the dropdown with user info */}
+        {userInfo ? (
           <Dropdown overlay={userMenu} trigger={["click"]}>
             <span className="navbar-dropdown">
-              Hi, {user.username}! <DownOutlined />
+              Hi, {userInfo.username}! <DownOutlined />
             </span>
           </Dropdown>
         ) : (
@@ -115,6 +103,8 @@ const Navbar = () => {
             <span className="ml-1">Login</span>
           </Link>
         )}
+
+        {/* Invite and Discord links */}
         <Link to="/invite" className="navbar-link">
           <PlusOutlined />
           <span className="ml-1">Invite</span>

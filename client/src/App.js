@@ -1,7 +1,7 @@
 // src/App.js
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import store from "./Redux/store";
 import MainLayout from "./Layout/MainLayout";
 import AdminLayout from "./Layout/AdminLayout";
@@ -23,7 +23,27 @@ import GuildsInfo from "./Components/GuildsPage/GuildsInfo";
 import Trochoiduquay from "./Components/Trochoiduquay/Trochoiduquay";
 import User from "./Components/UserInfoPage/User";
 import Notfround from "./Pages/Notfround";
+import { fetchUserInfo , fetchUserInfoById } from "./Redux/UserSlice";
+import Testpage from "./Pages/Testpage";
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchUserInfo())
+      .then((action) => {
+        // Check if action.payload is available before accessing id
+        const userId = action?.payload?.id;
+        if (userId) {
+          dispatch(fetchUserInfoById(userId));
+        } else {
+          console.error("User ID not found in the response");
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to fetch user info:", error);
+      });
+  }, [dispatch]);
+
+  
   return (
     <Provider store={store}>
       <Router>
@@ -48,6 +68,7 @@ function App() {
             <Route path="Misc/New-Embed-Builder" element={<NewEmbedBuilder/>} />
             <Route path="Misc/Placeholder" element={<Placeholder />} />
             <Route path="*" element={<Notfround />} />
+            <Route path="Testpage" element={<Testpage />} />
 
           </Route>
           <Route path="/admin" element={<AdminLayout />} />
