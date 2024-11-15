@@ -22,7 +22,7 @@ router.route("/users/:id").get((req, res) => {
   fetchFromDatabase(query, [id], res, "No user found with this ID");
 });
 
-router.get("/lsgd/:id", (req, res) => {
+router.get("/users/:id/transactions", (req, res) => {
   fetchFromDatabase(
     "SELECT * FROM currencytransactions WHERE userid = $1 ORDER BY id ASC",
     [req.params.id],

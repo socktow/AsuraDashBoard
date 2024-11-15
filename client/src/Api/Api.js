@@ -19,6 +19,7 @@ const api = {
   getUserInfo: () => axios.get(`${BASE_URL}/user/me`),
   getUserGuilds: () => axios.get(`${BASE_URL}/guilds`),
   getGuildById: (guildId) => axios.get(`${BASE_URL}/api/guilds/${guildId}`),
+  getTransById: (userId) => axios.get(`${BASE_URL}/api/users/${userId}/transactions`),
   // PATCH METHOD
   PatchUserBalance: (userId) => axios.get(`${BASE_URL}/api/users/${userId}/config`), 
   // Payment Method

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Dropdown, Menu} from "antd";
+import { Dropdown, Menu } from "antd";
 import {
   SmileOutlined,
   TeamOutlined,
@@ -10,7 +10,7 @@ import {
   LoginOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { fetchUserInfo, logoutUser } from "../../Redux/UserSlice";
+import { fetchUserInfo, logoutUser, fetchUserInfoById } from "../../Redux/UserSlice";
 import "./Navbar.scss";
 
 const Navbar = () => {
@@ -20,7 +20,15 @@ const Navbar = () => {
   useEffect(() => {
     if (!user && status === "idle") {
       dispatch(fetchUserInfo());
+      const userId = user?.id;
+      if (userId) {
+        dispatch(fetchUserInfoById(userId));
+      }
     }
+
+    // Log the current user data and status
+    console.log("User data:", user);
+    console.log("Status:", status);
   }, [dispatch, user, status]);
 
   const userMenu = (
