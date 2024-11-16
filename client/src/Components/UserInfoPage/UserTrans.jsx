@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import api from "../../Api/Api";
 
-const UserTrans = () => {
-  const [userId, setUserId] = useState(null);
+const UserTrans = ({ prods }) => {
+  const { userInfo, userById } = prods;
   const [transactions, setTransactions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -10,34 +10,31 @@ const UserTrans = () => {
   const transactionsPerPage = 15;
 
   useEffect(() => {
-    const fetchUserDataAndTransactions = async () => {
-      setLoading(true);
-      try {
-        const userResponse = await api.getUserInfo();
-        const fetchedUserId = userResponse.data.id;
-        setUserId(fetchedUserId);
-
-        const transResponse = await api.getTransById(fetchedUserId);
-        const fetchedTransactions = transResponse.data
-          .map((transaction) => ({
-            id: transaction.id,
-            amount: transaction.amount,
-            type: transaction.type,
-            extra: transaction.extra || "N/A",
-            date: new Date(transaction.dateadded).toLocaleDateString(),
-          }))
-          .sort((a, b) => new Date(b.dateadded) - new Date(a.dateadded));
-        setTransactions(fetchedTransactions);
-
-      } catch (err) {
-        setError("Failed to load user information or transactions.");
-      } finally {
-        setLoading(false);
+    const fetchUserTransactions = async () => {
+      if (userById?.id && transactions.length === 0) {
+        setLoading(true);
+        try {
+          const transResponse = await api.getTransById(userById.userid);
+          const fetchedTransactions = transResponse.data
+            .map((transaction) => ({
+              id: transaction.id,
+              amount: transaction.amount,
+              type: transaction.type,
+              extra: transaction.extra || "N/A",
+              date: new Date(transaction.dateadded).toLocaleDateString(),
+            }))
+            .sort((a, b) => new Date(b.dateadded) - new Date(a.dateadded));
+          setTransactions(fetchedTransactions);
+        } catch (err) {
+          setError("Failed to load transactions.");
+        } finally {
+          setLoading(false);
+        }
       }
     };
-
-    fetchUserDataAndTransactions();
-  }, []);
+  
+    fetchUserTransactions();
+  }, [userById, transactions.length]);  
 
   // Pagination calculations
   const indexOfLastTransaction = currentPage * transactionsPerPage;
@@ -59,7 +56,7 @@ const UserTrans = () => {
   return (
     <div className="bg-white p-6 rounded-xl shadow-lg space-y-6">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-        Transaction History
+        Transaction History for {userInfo?.name || "User"}
       </h2>
 
       {/* Transaction Table */}
@@ -169,4 +166,3 @@ const UserTrans = () => {
 };
 
 export default UserTrans;
-

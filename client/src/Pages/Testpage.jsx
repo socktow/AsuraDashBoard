@@ -1,20 +1,7 @@
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchUserInfo, fetchUserInfoById } from "../Redux/UserSlice";  // Cập nhật import
+import React from "react";
 
-const Testpage = () => {
-  const dispatch = useDispatch();
-  const userInfo = useSelector((state) => state.user.user);
-  const userById = useSelector((state) => state.user.userById); 
-
-  useEffect(() => {
-    dispatch(fetchUserInfo()).then((action) => {
-      const userId = action.payload.id;
-      if (userId) {
-        dispatch(fetchUserInfoById(userId));
-      }
-    });
-  }, [dispatch]);
+const Testpage = ({ prods }) => {
+  const { userInfo, userById } = prods;
 
   const containerStyle = {
     display: "flex",
@@ -66,7 +53,7 @@ const Testpage = () => {
             </p>
           </>
         ) : (
-          <p style={loadingStyle}>Loading user information...</p>
+          <p style={loadingStyle}>Không có thông tin người dùng.</p>
         )}
 
         <br />
@@ -83,7 +70,7 @@ const Testpage = () => {
             </p>
           </>
         ) : (
-          <p style={loadingStyle}>Loading user details...</p>
+          <p style={loadingStyle}>Không có chi tiết người dùng.</p>
         )}
       </div>
     </div>

@@ -1,31 +1,26 @@
-import React, { useEffect } from "react";
-import { Card, Avatar, Typography, Spin } from "antd";
+import React from "react";
+import { Card, Avatar, Typography } from "antd";
 import "tailwindcss/tailwind.css";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchUserInfo, fetchUserInfoById } from "../../Redux/UserSlice";
+
 const { Title, Text } = Typography;
 
 const formatCurrency = (amount) => parseInt(amount).toLocaleString("en-US");
 
-const UserInfo = () => {
-  const dispatch = useDispatch();
-  const userInfo = useSelector((state) => state.user.user);
-  const userById = useSelector((state) => state.user.userById); 
-
-  useEffect(() => {
-    dispatch(fetchUserInfo()).then((action) => {
-      const userId = action.payload.id;
-      if (userId) {
-        dispatch(fetchUserInfoById(userId));
-      }
-    });
-  }, [dispatch]);
+const UserInfo = ({ prods }) => {
+  const { userInfo, userById } = prods;
 
   if (!userInfo || !userById) {
-    return <Spin size="large" />;
+    return <p>Loading...</p>;
   }
-  const avatarUrl = userInfo?.id && userInfo?.avatarid ? `https://cdn.discordapp.com/avatars/${userInfo.id}/${userInfo.avatarid}.png` : '';
-  const bannerUrl = userInfo?.id && userInfo?.bannerid ? `https://cdn.discordapp.com/banners/${userInfo.id}/${userInfo.bannerid}.png` : '';
+
+  const avatarUrl =
+    userInfo?.id && userInfo?.avatarid
+      ? `https://cdn.discordapp.com/avatars/${userInfo.id}/${userInfo.avatarid}.png`
+      : "";
+  const bannerUrl =
+    userInfo?.id && userInfo?.bannerid
+      ? `https://cdn.discordapp.com/banners/${userInfo.id}/${userInfo.bannerid}.png`
+      : "";
 
   const userFields = [
     { display: "APP-ID ", key: "id" },
@@ -68,7 +63,10 @@ const UserInfo = () => {
             {userFields.map(({ display, key }, index) => (
               <div key={index} className="border-b pb-2">
                 <Text strong className="block text-gray-700 text-lg">
-                  {display}: <Text className="text-gray-900 font-semibold">{formatCurrency(userById[key])}</Text>
+                  {display}:{" "}
+                  <Text className="text-gray-900 font-semibold">
+                    {formatCurrency(userById[key])}
+                  </Text>
                 </Text>
               </div>
             ))}

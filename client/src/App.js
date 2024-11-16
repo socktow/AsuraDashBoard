@@ -1,5 +1,5 @@
 // src/App.js
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider, useDispatch } from "react-redux";
 import store from "./Redux/store";
@@ -27,13 +27,20 @@ import { fetchUserInfo , fetchUserInfoById } from "./Redux/UserSlice";
 import Testpage from "./Pages/Testpage";
 function App() {
   const dispatch = useDispatch();
+  const [prods, setProds] = useState({ userInfo: null, userById: null });
+
   useEffect(() => {
     dispatch(fetchUserInfo())
       .then((action) => {
-        // Check if action.payload is available before accessing id
         const userId = action?.payload?.id;
         if (userId) {
-          dispatch(fetchUserInfoById(userId));
+          dispatch(fetchUserInfoById(userId)).then((userByIdAction) => {
+            setProds((prevProds) => ({
+              ...prevProds,
+              userInfo: action.payload,
+              userById: userByIdAction.payload,
+            }));
+          });
         } else {
           console.error("User ID not found in the response");
         }
@@ -42,7 +49,6 @@ function App() {
         console.error("Failed to fetch user info:", error);
       });
   }, [dispatch]);
-
   
   return (
     <Provider store={store}>
@@ -50,13 +56,14 @@ function App() {
         <Routes>
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Shop />} />
-            <Route path="user" element={<User />} />
+            <Route path="user" element={<User prods={prods}/>} />
             <Route path="guilds" element={<Guilds />} />
             <Route path="guilds/:guildId" element={<GuildsInfo />} />
             <Route path="Login" element={<Login />} />
             <Route path="Payment" element={<Payment />} />
-            <Route path="PaymentSuccess" element={<PaymentSuccess />} />
+            <Route path="PaymentSuccess" element={<PaymentSuccess prods={prods}/>} />
             <Route path="Duquay" element={<Trochoiduquay />} />
+            <Route path="Testpage" element={<Testpage prods={prods} />} />
             {/* Single Page */}
             <Route path="Commands" element={<Commands />} />
             <Route path="Patch-Note" element={<PatchNote />} />
@@ -68,7 +75,6 @@ function App() {
             <Route path="Misc/New-Embed-Builder" element={<NewEmbedBuilder/>} />
             <Route path="Misc/Placeholder" element={<Placeholder />} />
             <Route path="*" element={<Notfround />} />
-            <Route path="Testpage" element={<Testpage />} />
 
           </Route>
           <Route path="/admin" element={<AdminLayout />} />
