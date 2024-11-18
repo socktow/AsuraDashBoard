@@ -20,15 +20,14 @@ function Login() {
       dispatch(fetchUserInfo());
       navigate("/user");
     }
-  }, [dispatch, navigate]);
+  }, [dispatch, navigate]);  
 
   useEffect(() => {
     const token = localStorage.getItem("discord_token");
-    if (token && !user) {
-      dispatch(fetchUserInfo());
-      navigate("/user");
+    if (!token || !user) {
+      navigate("/login");
     }
-  }, [dispatch, navigate, user]);
+  }, [navigate, user]);  
 
   return (
     <div

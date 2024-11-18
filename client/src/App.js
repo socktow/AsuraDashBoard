@@ -63,7 +63,7 @@ function App() {
             <Route path="Payment" element={<Payment />} />
             <Route path="PaymentSuccess" element={<PaymentSuccess prods={prods}/>} />
             <Route path="Duquay" element={<Trochoiduquay />} />
-            <Route path="Testpage" element={<Testpage prods={prods} />} />
+            <Route path="Testpage" element={<Testpage />} />
             {/* Single Page */}
             <Route path="Commands" element={<Commands />} />
             <Route path="Patch-Note" element={<PatchNote />} />

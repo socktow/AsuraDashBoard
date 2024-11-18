@@ -3,19 +3,34 @@ import { useLocation } from 'react-router-dom';
 import api from '../../Api/Api';
 import MoMoSuccess from './method/MoMo';
 import ZaloSuccess from './method/Zalo';
-
-const PaymentSuccess = () => {
+import { useDispatch } from 'react-redux';
+import { fetchUserInfo, fetchUserInfoById } from "../../Redux/UserSlice";
+const PaymentSuccess = (prods) => {
   const location = useLocation();
   const queryParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
   const [isValid, setIsValid] = useState(null);
   const [orderDetails, setOrderDetails] = useState(null);
   const paymentMethod = queryParams.get('partnerCode') === 'MOMO' ? 'momo' : 'zalo';
+
+  const dispatch = useDispatch();
+  const userInfo = prods?.userInfo;
+
+  useEffect(() => {
+    if (!userInfo) {
+      dispatch(fetchUserInfo()).then((action) => {
+        const userId = action?.payload?.id;
+        if (userId) {
+          dispatch(fetchUserInfoById(userId));
+        }
+      });
+    }
+  }, [dispatch, userInfo]);
+
   useEffect(() => {
     const orderId = queryParams.get('orderId');
     const appTransId = queryParams.get('apptransid');
 
     if (paymentMethod === 'zalo') {
-      // Call Zalo payment check API
       api.checkZaloPayment(appTransId)
         .then(response => {
           if (response.return_code === 1) {

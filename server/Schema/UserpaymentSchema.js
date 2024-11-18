@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const UserPaymentSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   username: { type: String, required: true },
   paymentMethod: { type: String, required: true },
   amount: { type: Number, required: true },

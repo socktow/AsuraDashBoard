@@ -10,12 +10,12 @@ import {
   LoginOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import {  logoutUser } from "../../Redux/UserSlice";
+import { logoutUser } from "../../Redux/UserSlice";
 import "./Navbar.scss";
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const userInfo = useSelector((state) => state.user.user); 
+  const userInfo = useSelector((state) => state.user.user);
   const userMenu = (
     <Menu>
       <Menu.Item key="userInfo">
@@ -33,7 +33,12 @@ const Navbar = () => {
           <TeamOutlined /> Nạp Thẻ
         </Link>
       </Menu.Item>
-      <Menu.Item key="logout" onClick={() => dispatch(logoutUser())}>
+      <Menu.Item
+        key="logout"
+        onClick={() => {
+          dispatch(logoutUser());
+        }}
+      >
         <LoginOutlined /> Logout
       </Menu.Item>
     </Menu>
@@ -75,17 +80,27 @@ const Navbar = () => {
   return (
     <header className="navbar">
       <div className="navbar-logo">
-        <Link to="/" className="navbar-link">Asura BOT</Link>
+        <Link to="/" className="navbar-link">
+          Asura BOT
+        </Link>
       </div>
 
       <nav className="navbar-links">
-        <Link to="/commands" className="navbar-link">Command</Link>
-        <Link to="/patch-note" className="navbar-link">Patch Note</Link>
+        <Link to="/commands" className="navbar-link">
+          Command
+        </Link>
+        <Link to="/patch-note" className="navbar-link">
+          Patch Note
+        </Link>
         <Dropdown overlay={aboutMenu} trigger={["click"]}>
-          <span className="navbar-dropdown">About <DownOutlined /></span>
+          <span className="navbar-dropdown">
+            About <DownOutlined />
+          </span>
         </Dropdown>
         <Dropdown overlay={miscMenu} trigger={["click"]}>
-          <span className="navbar-dropdown">Misc <DownOutlined /></span>
+          <span className="navbar-dropdown">
+            Misc <DownOutlined />
+          </span>
         </Dropdown>
       </nav>
 

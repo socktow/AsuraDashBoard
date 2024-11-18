@@ -21,15 +21,16 @@ const userSlice = createSlice({
   name: "user",
   initialState: {
     user: null,
-    userById: null, 
+    userById: null,
     status: "idle",
     error: null,
   },
   reducers: {
     logoutUser: (state) => {
+      localStorage.removeItem("discord_token"); // Xóa token từ localStorage
       state.user = null;
       state.userById = null;
-    },
+    },    
   },
   extraReducers: (builder) => {
     builder
@@ -38,7 +39,7 @@ const userSlice = createSlice({
       })
       .addCase(fetchUserInfoById.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.userById = action.payload;  // Lưu thông tin userById
+        state.userById = action.payload;
       })
       .addCase(fetchUserInfoById.rejected, (state, action) => {
         state.status = "failed";
@@ -49,7 +50,7 @@ const userSlice = createSlice({
       })
       .addCase(fetchUserInfo.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.user = action.payload;  // Lưu thông tin người dùng gốc
+        state.user = action.payload;
       })
       .addCase(fetchUserInfo.rejected, (state, action) => {
         state.status = "failed";

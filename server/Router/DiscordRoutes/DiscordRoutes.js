@@ -17,10 +17,23 @@ module.exports = (client) => {
     res.redirect(url);
   });
 
+  router.get("/auth/discord/logout", (req, res) => {
+    const userId = Object.keys(users)[0];
+    
+    if (!userId) {
+      return res.status(400).json({ error: "No user is logged in" });
+    }
+    delete users[userId];
+    managedGuilds = [];
+    res.redirect(config.botConfig.logoutRedirectUrl || "/");
+  });
+
+  
   router.get("/auth/discord/callback", async (req, res) => {
     if (!req.query.code) {
-      return res.status(400).send("Code not provided.");
+      return res.status(400).send("Authorization code not provided.");
     }
+  
     const { code } = req.query;
     const params = new URLSearchParams({
       client_id: config.botConfig.clientId,
@@ -29,30 +42,45 @@ module.exports = (client) => {
       code,
       redirect_uri: config.botConfig.redirectUri,
     });
-
+  
     try {
+      // Lấy token từ Discord
       const tokenResponse = await axios.post(
         "https://discord.com/api/oauth2/token",
-        params
+        params.toString(),
+        { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
       );
-      const { access_token } = tokenResponse.data;
+      const { access_token, expires_in, refresh_token } = tokenResponse.data;
+  
+      // Lấy thông tin người dùng từ Discord
       const userResponse = await axios.get("https://discord.com/api/users/@me", {
         headers: { Authorization: `Bearer ${access_token}` },
       });
-
-      const { id, username, avatar, banner} = userResponse.data;
-      users[id] = { id, username, avatar, banner};
+  
+      const { id, username, avatar, banner } = userResponse.data;
+  
+      // Lưu người dùng vào bộ nhớ tạm
+      users[id] = {
+        id,
+        username,
+        avatar,
+        banner,
+        access_token,
+        refresh_token,
+        expires_at: Date.now() + expires_in * 1000, // Thời gian hết hạn token
+      };
+  
+      // Lấy danh sách server mà người dùng tham gia
       const guildsResponse = await axios.get(
         "https://discord.com/api/users/@me/guilds",
-        {
-          headers: { Authorization: `Bearer ${access_token}` },
-        }
+        { headers: { Authorization: `Bearer ${access_token}` } }
       );
-
+  
       managedGuilds = guildsResponse.data.filter(
         (guild) => guild.owner || (guild.permissions && guild.permissions & 0x8)
       );
-
+  
+      // Kiểm tra bot có trong server không
       await Promise.all(
         managedGuilds.map(async (guild) => {
           try {
@@ -62,23 +90,26 @@ module.exports = (client) => {
             );
             guild.botInGuild = true;
           } catch (error) {
-            guild.botInGuild =
-              error.response && error.response.status === 404
-                ? false
-                : guild.botInGuild;
+            guild.botInGuild = error.response?.status === 404 ? false : null;
           }
         })
       );
-
-      res.redirect(config.botConfig.clientRedirectUrl);
+  
+      // Redirect về client với token
+      res.redirect(
+        `${config.botConfig.clientRedirectUrl}?token=${encodeURIComponent(
+          access_token
+        )}`
+      );
     } catch (error) {
       console.error(
         "Error in Discord callback:",
-        error.response ? error.response.data : error
+        error.response ? error.response.data : error.message
       );
-      res.status(500).send("Internal Server Error");
+      res.status(500).send("Internal Server Error.");
     }
   });
+  
 
   router.get("/user/me", async (req, res) => {
     const userId = Object.keys(users)[0];

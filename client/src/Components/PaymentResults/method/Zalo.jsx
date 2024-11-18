@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify"; // Correctly import toast and ToastContainer
 import "react-toastify/dist/ReactToastify.css"; // Import styles
 
 const ZaloSuccess = ({ orderDetails, responseTime }) => {
   const [paymentStatus, setPaymentStatus] = useState(null);
-
+  const userById = useSelector((state) => state.user.userById);
   const formatResponseTime = (timestamp) => {
     const date = new Date(Number(timestamp));
     return date.toLocaleString();
@@ -63,7 +64,7 @@ const ZaloSuccess = ({ orderDetails, responseTime }) => {
 
         <div className="border-t border-gray-300 mt-6 pt-4">
           <h2 className="text-2xl font-semibold text-gray-800 mb-2">
-            Payment Details
+            Payment Details - user: {userById.id}
           </h2>
           <div className="text-left space-y-2">
             <p className="text-gray-600">

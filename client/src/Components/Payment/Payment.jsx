@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import MoMoPayment from './method/MoMoPayment';
 import ZaloPayment from './method/ZaloPayment';
 import { useSelector } from 'react-redux';
-import './Payment.scss'; // Import the SCSS file for custom styling
+import './Payment.scss';
 
 const Payment = () => {
   const [selectedAmount, setSelectedAmount] = useState(null);
