@@ -16,18 +16,6 @@ module.exports = (client) => {
 
     res.redirect(url);
   });
-
-  router.get("/auth/discord/logout", (req, res) => {
-    const userId = Object.keys(users)[0];
-    
-    if (!userId) {
-      return res.status(400).json({ error: "No user is logged in" });
-    }
-    delete users[userId];
-    managedGuilds = [];
-    res.redirect(config.botConfig.logoutRedirectUrl || "/");
-  });
-
   
   router.get("/auth/discord/callback", async (req, res) => {
     if (!req.query.code) {
@@ -51,15 +39,12 @@ module.exports = (client) => {
         { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
       );
       const { access_token, expires_in, refresh_token } = tokenResponse.data;
-  
-      // Lấy thông tin người dùng từ Discord
       const userResponse = await axios.get("https://discord.com/api/users/@me", {
         headers: { Authorization: `Bearer ${access_token}` },
       });
   
       const { id, username, avatar, banner } = userResponse.data;
-  
-      // Lưu người dùng vào bộ nhớ tạm
+      console.log("User Logged In", access_token);
       users[id] = {
         id,
         username,
@@ -67,10 +52,8 @@ module.exports = (client) => {
         banner,
         access_token,
         refresh_token,
-        expires_at: Date.now() + expires_in * 1000, // Thời gian hết hạn token
+        expires_at: Date.now() + expires_in * 1000,
       };
-  
-      // Lấy danh sách server mà người dùng tham gia
       const guildsResponse = await axios.get(
         "https://discord.com/api/users/@me/guilds",
         { headers: { Authorization: `Bearer ${access_token}` } }

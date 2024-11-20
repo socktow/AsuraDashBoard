@@ -13,21 +13,26 @@ function Login() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get("token");
+
+    // Nếu có token trong URL, lưu vào localStorage và chuyển hướng
     if (token) {
       localStorage.setItem("discord_token", token);
       urlParams.delete("token");
-      window.history.replaceState(null, null, window.location.pathname);
-      dispatch(fetchUserInfo());
-      navigate("/user");
+      window.history.replaceState(null, null, window.location.pathname); // Xóa token khỏi URL
+
+      dispatch(fetchUserInfo()); // Lấy thông tin người dùng
+      navigate("/user"); // Chuyển hướng đến trang người dùng
     }
-  }, [dispatch, navigate]);  
+  }, [dispatch, navigate]);
 
   useEffect(() => {
     const token = localStorage.getItem("discord_token");
+
+    // Nếu không có token hoặc không có thông tin người dùng, chuyển hướng về trang đăng nhập
     if (!token || !user) {
       navigate("/login");
     }
-  }, [navigate, user]);  
+  }, [navigate, user]);
 
   return (
     <div
@@ -42,7 +47,7 @@ function Login() {
           <span className="text-red-500 animate-bounce">Error fetching user data.</span>
         )}
         {user ? (
-          <UserInfo user={user} />
+          <UserInfo user={user} /> // Hiển thị thông tin người dùng
         ) : (
           <span className="text-white text-lg">Not logged in.</span>
         )}

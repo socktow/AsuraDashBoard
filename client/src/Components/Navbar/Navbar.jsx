@@ -16,6 +16,18 @@ import "./Navbar.scss";
 const Navbar = () => {
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.user.user);
+
+  const handleLogout = () => {
+    // Xóa token khỏi localStorage
+    localStorage.removeItem("token");
+
+    // Đăng xuất người dùng từ Redux
+    dispatch(logoutUser());
+
+    // Chuyển hướng về trang đăng nhập
+    window.location.href = "/login";
+  };
+
   const userMenu = (
     <Menu>
       <Menu.Item key="userInfo">
@@ -33,12 +45,7 @@ const Navbar = () => {
           <TeamOutlined /> Nạp Thẻ
         </Link>
       </Menu.Item>
-      <Menu.Item
-        key="logout"
-        onClick={() => {
-          dispatch(logoutUser());
-        }}
-      >
+      <Menu.Item key="logout" onClick={handleLogout}>
         <LoginOutlined /> Logout
       </Menu.Item>
     </Menu>
