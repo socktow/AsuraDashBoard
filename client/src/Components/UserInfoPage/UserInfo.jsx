@@ -1,13 +1,15 @@
 import React from "react";
 import { Card, Avatar, Typography } from "antd";
 import "tailwindcss/tailwind.css";
+import { useSelector } from "react-redux";
 
 const { Title, Text } = Typography;
 
 const formatCurrency = (amount) => parseInt(amount).toLocaleString("en-US");
 
 const UserInfo = ({ prods }) => {
-  const { userInfo, userById } = prods;
+  const userById = useSelector((state) => state.user.userById);
+  const userInfo = useSelector((state) => state.user.user);
 
   if (!userInfo || !userById) {
     return <p>Loading...</p>;
