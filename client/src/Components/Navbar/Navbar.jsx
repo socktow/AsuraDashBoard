@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Dropdown, Menu } from "antd";
@@ -9,8 +9,6 @@ import {
   DownOutlined,
   LoginOutlined,
   PlusOutlined,
-  MenuOutlined,
-  CloseOutlined,
 } from "@ant-design/icons";
 import { logoutUser } from "../../Redux/UserSlice";
 import "./Navbar.scss";
@@ -18,11 +16,15 @@ import "./Navbar.scss";
 const Navbar = () => {
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.user.user);
-  const [menuOpen, setMenuOpen] = useState(false); // State cho menu
 
   const handleLogout = () => {
+    // Xóa token khỏi localStorage
     localStorage.removeItem("token");
+
+    // Đăng xuất người dùng từ Redux
     dispatch(logoutUser());
+
+    // Chuyển hướng về trang đăng nhập
     window.location.href = "/login";
   };
 
@@ -49,6 +51,7 @@ const Navbar = () => {
     </Menu>
   );
 
+  // About menu for links like 'Partner', 'Contact', etc.
   const aboutMenu = (
     <Menu>
       <Menu.Item key="partner">
@@ -63,6 +66,7 @@ const Navbar = () => {
     </Menu>
   );
 
+  // Misc menu for links like 'Term', 'Privacy', etc.
   const miscMenu = (
     <Menu>
       <Menu.Item key="term">
@@ -88,64 +92,50 @@ const Navbar = () => {
         </Link>
       </div>
 
-      {/* Hamburger menu button */}
-      <button
-        className="navbar-hamburger"
-        onClick={() => setMenuOpen(!menuOpen)}
-      >
-        {menuOpen ? <CloseOutlined /> : <MenuOutlined />}
-      </button>
-      <div className={`navbar-fullscreen-menu ${menuOpen ? "active" : ""}`}>
-  {/* Nút đóng */}
-  <button
-    className="navbar-close-button"
-    onClick={() => setMenuOpen(false)}
-  >
-    <CloseOutlined />
-  </button>
-
-  {/* Nội dung menu */}
-  <nav className="navbar-links">
-    <Link to="/commands" className="navbar-link">
-      Command
-    </Link>
-    <Link to="/patch-note" className="navbar-link">
-      Patch Note
-    </Link>
-    <Dropdown overlay={aboutMenu} trigger={["click"]}>
-      <span className="navbar-dropdown">
-        About <DownOutlined />
-      </span>
-    </Dropdown>
-    <Dropdown overlay={miscMenu} trigger={["click"]}>
-      <span className="navbar-dropdown">
-        Misc <DownOutlined />
-      </span>
-    </Dropdown>
-    <div className="navbar-user">
-      {userInfo ? (
-        <Dropdown overlay={userMenu} trigger={["click"]}>
+      <nav className="navbar-links">
+        <Link to="/commands" className="navbar-link">
+          Command
+        </Link>
+        <Link to="/patch-note" className="navbar-link">
+          Patch Note
+        </Link>
+        <Dropdown overlay={aboutMenu} trigger={["click"]}>
           <span className="navbar-dropdown">
-            Hi, {userInfo.username}! <DownOutlined />
+            About <DownOutlined />
           </span>
         </Dropdown>
-      ) : (
-        <Link to="/login" className="navbar-link">
-          <LoginOutlined />
-          <span className="ml-1">Login</span>
+        <Dropdown overlay={miscMenu} trigger={["click"]}>
+          <span className="navbar-dropdown">
+            Misc <DownOutlined />
+          </span>
+        </Dropdown>
+      </nav>
+
+      <div className="navbar-user">
+        {/* If the user is logged in, show the dropdown with user info */}
+        {userInfo ? (
+          <Dropdown overlay={userMenu} trigger={["click"]}>
+            <span className="navbar-dropdown">
+              Hi, {userInfo.username}! <DownOutlined />
+            </span>
+          </Dropdown>
+        ) : (
+          <Link to="/login" className="navbar-link">
+            <LoginOutlined />
+            <span className="ml-1">Login</span>
+          </Link>
+        )}
+
+        {/* Invite and Discord links */}
+        <Link to="/invite" className="navbar-link">
+          <PlusOutlined />
+          <span className="ml-1">Invite</span>
         </Link>
-      )}
-      <Link to="/invite" className="navbar-link">
-        <PlusOutlined />
-        <span className="ml-1">Invite</span>
-      </Link>
-      <Link to="/discord" className="navbar-link">
-        <SmileOutlined />
-        <span className="ml-1">Discord</span>
-      </Link>
-    </div>
-  </nav>
-</div>
+        <Link to="/discord" className="navbar-link">
+          <SmileOutlined />
+          <span className="ml-1">Discord</span>
+        </Link>
+      </div>
     </header>
   );
 };
